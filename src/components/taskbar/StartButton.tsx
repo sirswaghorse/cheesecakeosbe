@@ -6,8 +6,8 @@ const startMenuApps = appRegistry.filter((a) => a.startMenu);
 
 const rightItems = [
   { icon: "💻", label: "Computer" },
-  { icon: "📂", label: "Documents" },
-  { icon: "⚙️", label: "Control Panel" },
+  { icon: "📂", label: "Documents", appId: "documents" },
+  { icon: "⚙️", label: "Control Panel", appId: "controlpanel" },
 ];
 
 const StartMenu = ({
@@ -79,8 +79,8 @@ const StartMenu = ({
               key={item.label}
               className="win-menu-item"
               onClick={() => {
-                if (item.label === "Control Panel") {
-                  openApp("controlpanel");
+                if (item.appId) {
+                  openApp(item.appId);
                   onClose();
                 }
               }}

@@ -7,6 +7,7 @@ const AboutDemo = lazy(() => import("@/apps/AboutDemo"));
 const AuthApp = lazy(() => import("@/apps/AuthApp"));
 const ControlPanel = lazy(() => import("@/apps/ControlPanel"));
 const Browser = lazy(() => import("@/apps/Browser"));
+const Documents = lazy(() => import("@/apps/Documents"));
 
 export const appRegistry: AppConfig[] = [
   {
@@ -67,6 +68,16 @@ export const appRegistry: AppConfig[] = [
     defaultHeight: 550,
     component: Browser,
     desktopIcon: true,
+    startMenu: true,
+  },
+  {
+    id: "documents",
+    name: "Documents",
+    icon: "📂",
+    defaultWidth: 600,
+    defaultHeight: 450,
+    component: Documents,
+    desktopIcon: false,
     startMenu: true,
   },
 ];
