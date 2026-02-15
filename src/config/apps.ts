@@ -8,6 +8,7 @@ const AuthApp = lazy(() => import("@/apps/AuthApp"));
 const ControlPanel = lazy(() => import("@/apps/ControlPanel"));
 const Browser = lazy(() => import("@/apps/Browser"));
 const Documents = lazy(() => import("@/apps/Documents"));
+const VideoPlayer = lazy(() => import("@/apps/VideoPlayer"));
 
 export const appRegistry: AppConfig[] = [
   {
@@ -78,6 +79,16 @@ export const appRegistry: AppConfig[] = [
     defaultHeight: 450,
     component: Documents,
     desktopIcon: false,
+    startMenu: true,
+  },
+  {
+    id: "videoplayer",
+    name: "Video Player",
+    icon: "🎬",
+    defaultWidth: 640,
+    defaultHeight: 480,
+    component: VideoPlayer,
+    desktopIcon: true,
     startMenu: true,
   },
 ];
