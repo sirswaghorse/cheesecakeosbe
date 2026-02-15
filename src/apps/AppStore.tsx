@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useInstalledApps } from "@/contexts/InstalledAppsContext";
 
 interface StoreApp {
   id: string;
@@ -29,6 +30,7 @@ const AVAILABLE_APPS: StoreApp[] = [
   { id: "camera", name: "Camera", icon: "📷", description: "Webcam capture & filters", category: "Creative" },
   { id: "podcast", name: "Podcasts", icon: "🎙️", description: "Listen to your favorite shows", category: "Entertainment" },
   { id: "fitness", name: "Fitness", icon: "💪", description: "Workout tracker & health stats", category: "Health" },
+  { id: "h-archive", name: "H Archive", icon: "❤️", description: "Online archive browser", category: "Internet" },
 ];
 
 const INSTALLED_IDS = ["notepad", "pictures", "about", "browser", "videoplayer", "documents"];
@@ -65,6 +67,7 @@ const AppCard = ({ app, installed, onAction }: { app: StoreApp; installed: boole
 const AppStore = () => {
   const [search, setSearch] = useState("");
   const [installed, setInstalled] = useState<Set<string>>(new Set(INSTALLED_IDS));
+  const { installApp } = useInstalledApps();
 
   const filteredStore = useMemo(() => {
     const q = search.toLowerCase();
@@ -79,6 +82,7 @@ const AppStore = () => {
 
   const handleInstall = (id: string) => {
     setInstalled((prev) => new Set(prev).add(id));
+    installApp(id);
   };
 
   return (
