@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { WindowProvider } from "@/contexts/WindowContext";
+import { WallpaperProvider } from "@/contexts/WallpaperContext";
 import Desktop from "@/components/desktop/Desktop";
 import Taskbar from "@/components/taskbar/Taskbar";
 import { useWebamp } from "@/hooks/useWebamp";
@@ -39,12 +40,14 @@ const Index = () => {
   }
 
   return (
-    <WindowProvider>
-      {phase === "desktop" && <DesktopShell onShutdown={handleShutdown} />}
-      {(phase === "shuttingDown" || phase === "booting") && (
-        <ShutdownOverlay phase={phase} />
-      )}
-    </WindowProvider>
+    <WallpaperProvider>
+      <WindowProvider>
+        {phase === "desktop" && <DesktopShell onShutdown={handleShutdown} />}
+        {(phase === "shuttingDown" || phase === "booting") && (
+          <ShutdownOverlay phase={phase} />
+        )}
+      </WindowProvider>
+    </WallpaperProvider>
   );
 };
 

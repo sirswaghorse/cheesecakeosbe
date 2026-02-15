@@ -75,7 +75,16 @@ const StartMenu = ({
       >
         <div className="flex-1">
           {rightItems.map((item) => (
-            <div key={item.label} className="win-menu-item">
+            <div
+              key={item.label}
+              className="win-menu-item"
+              onClick={() => {
+                if (item.label === "Control Panel") {
+                  openApp("controlpanel");
+                  onClose();
+                }
+              }}
+            >
               <span className="text-lg">{item.icon}</span>
               <span className="font-medium">{item.label}</span>
             </div>
