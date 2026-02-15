@@ -16,7 +16,7 @@ const ShutdownOverlay = ({ phase }: { phase: "shuttingDown" | "booting" }) => {
           />
         </div>
         <p className="text-white/80 text-lg font-light tracking-wide">
-          {isShutdown ? "Shutting down..." : "Starting Windows..."}
+          {isShutdown ? "Shutting down..." : "Starting HorseShoe OS..."}
         </p>
       </div>
     </div>
