@@ -1,5 +1,6 @@
 import { appRegistry } from "@/config/apps";
 import { useWindows } from "@/contexts/WindowContext";
+import winampLogo from "@/assets/winamp-logo.png";
 
 interface DesktopIconsProps {
   onWebampOpen?: () => void;
@@ -26,7 +27,7 @@ const DesktopIcons = ({ onWebampOpen }: DesktopIconsProps) => {
         className="win-desktop-icon"
         onDoubleClick={onWebampOpen}
       >
-        <span className="text-3xl drop-shadow-md">🎵</span>
+        <img src={winampLogo} alt="Winamp" className="w-8 h-8 drop-shadow-md" />
         <span className="text-xs text-white drop-shadow-md leading-tight">Winamp</span>
       </div>
     </div>
