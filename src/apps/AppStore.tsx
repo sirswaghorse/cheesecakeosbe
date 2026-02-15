@@ -44,7 +44,7 @@ const INSTALLED_APPS: StoreApp[] = [
   { id: "documents", name: "Documents", icon: "📂", description: "File manager", category: "Productivity" },
 ];
 
-const AppCard = ({ app, installed, onAction }: { app: StoreApp; installed: boolean; onAction: () => void }) => (
+const AppCard = ({ app, installed, isDefault, onAction }: { app: StoreApp; installed: boolean; isDefault: boolean; onAction: () => void }) => (
   <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-[hsl(220_14%_92%)] transition-colors">
     <span className="text-3xl shrink-0">{app.icon}</span>
     <div className="flex-1 min-w-0">
@@ -52,22 +52,25 @@ const AppCard = ({ app, installed, onAction }: { app: StoreApp; installed: boole
       <div className="text-xs text-[hsl(210_10%_50%)] truncate">{app.description}</div>
       <div className="text-[10px] text-[hsl(210_10%_60%)] mt-0.5">{app.category}</div>
     </div>
-    <Button
-      size="sm"
-      variant={installed ? "outline" : "default"}
-      className="shrink-0 text-xs h-7 px-3"
-      onClick={onAction}
-      disabled={installed}
-    >
-      {installed ? "Installed" : "Get"}
-    </Button>
+    {installed && isDefault ? (
+      <span className="shrink-0 text-[10px] text-[hsl(210_10%_55%)] px-2">Default</span>
+    ) : (
+      <Button
+        size="sm"
+        variant={installed ? "destructive" : "default"}
+        className="shrink-0 text-xs h-7 px-3"
+        onClick={onAction}
+      >
+        {installed ? "Uninstall" : "Get"}
+      </Button>
+    )}
   </div>
 );
 
 const AppStore = () => {
   const [search, setSearch] = useState("");
   const [installed, setInstalled] = useState<Set<string>>(new Set(INSTALLED_IDS));
-  const { installApp } = useInstalledApps();
+  const { installApp, uninstallApp } = useInstalledApps();
 
   const filteredStore = useMemo(() => {
     const q = search.toLowerCase();
@@ -83,6 +86,15 @@ const AppStore = () => {
   const handleInstall = (id: string) => {
     setInstalled((prev) => new Set(prev).add(id));
     installApp(id);
+  };
+
+  const handleUninstall = (id: string) => {
+    setInstalled((prev) => {
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
+    uninstallApp(id);
   };
 
   return (
@@ -116,7 +128,7 @@ const AppStore = () => {
                 </div>
               ) : (
                 filteredStore.map((app) => (
-                  <AppCard key={app.id} app={app} installed={false} onAction={() => handleInstall(app.id)} />
+                  <AppCard key={app.id} app={app} installed={false} isDefault={false} onAction={() => handleInstall(app.id)} />
                 ))
               )}
             </div>
@@ -127,7 +139,7 @@ const AppStore = () => {
           <ScrollArea className="h-full">
             <div className="space-y-1 pr-2">
               {installedList.map((app) => (
-                <AppCard key={app.id} app={app} installed={true} onAction={() => {}} />
+                <AppCard key={app.id} app={app} installed={true} isDefault={INSTALLED_IDS.includes(app.id)} onAction={() => handleUninstall(app.id)} />
               ))}
             </div>
           </ScrollArea>

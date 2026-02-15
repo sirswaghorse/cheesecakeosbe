@@ -3,6 +3,7 @@ import { createContext, useContext, useState, useCallback, type ReactNode } from
 interface InstalledAppsContextType {
   installedAppIds: Set<string>;
   installApp: (appId: string) => void;
+  uninstallApp: (appId: string) => void;
   isInstalled: (appId: string) => boolean;
 }
 
@@ -15,13 +16,21 @@ export const InstalledAppsProvider = ({ children }: { children: ReactNode }) => 
     setInstalledAppIds((prev) => new Set(prev).add(appId));
   }, []);
 
+  const uninstallApp = useCallback((appId: string) => {
+    setInstalledAppIds((prev) => {
+      const next = new Set(prev);
+      next.delete(appId);
+      return next;
+    });
+  }, []);
+
   const isInstalled = useCallback(
     (appId: string) => installedAppIds.has(appId),
     [installedAppIds]
   );
 
   return (
-    <InstalledAppsContext.Provider value={{ installedAppIds, installApp, isInstalled }}>
+    <InstalledAppsContext.Provider value={{ installedAppIds, installApp, uninstallApp, isInstalled }}>
       {children}
     </InstalledAppsContext.Provider>
   );
