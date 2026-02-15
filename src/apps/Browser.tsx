@@ -39,7 +39,7 @@ const Browser = () => {
           value={addressBar}
           onChange={(e) => setAddressBar(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="flex-1 text-xs px-2 py-1 rounded border bg-white"
+          className="flex-1 text-xs px-2 py-1 rounded border bg-white text-black"
           style={{ borderColor: "#aaa" }}
           placeholder="Search or enter URL"
         />
