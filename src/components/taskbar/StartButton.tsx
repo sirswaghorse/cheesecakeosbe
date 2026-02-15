@@ -8,15 +8,16 @@ const rightItems = [
   { icon: "💻", label: "Computer" },
   { icon: "📂", label: "Documents" },
   { icon: "⚙️", label: "Control Panel" },
-  { icon: "🔌", label: "Shutdown" },
 ];
 
 const StartMenu = ({
   open,
   onClose,
+  onShutdown,
 }: {
   open: boolean;
   onClose: () => void;
+  onShutdown?: () => void;
 }) => {
   const { openApp } = useWindows();
   const ref = useRef<HTMLDivElement>(null);
@@ -69,21 +70,32 @@ const StartMenu = ({
       </div>
       {/* Right panel */}
       <div
-        className="w-[45%] py-2 px-2"
+        className="w-[45%] py-2 px-2 flex flex-col"
         style={{ background: "hsl(210 30% 90%)", borderLeft: "1px solid hsl(210 20% 82%)" }}
       >
-        {rightItems.map((item) => (
-          <div key={item.label} className="win-menu-item">
-            <span className="text-lg">{item.icon}</span>
-            <span className="font-medium">{item.label}</span>
+        <div className="flex-1">
+          {rightItems.map((item) => (
+            <div key={item.label} className="win-menu-item">
+              <span className="text-lg">{item.icon}</span>
+              <span className="font-medium">{item.label}</span>
+            </div>
+          ))}
+        </div>
+        <div className="border-t border-[hsl(210_15%_82%)] mt-2 pt-2">
+          <div
+            className="win-menu-item"
+            onClick={() => { onShutdown?.(); onClose(); }}
+          >
+            <span className="text-lg">🔌</span>
+            <span className="font-medium">Shutdown</span>
           </div>
-        ))}
+        </div>
       </div>
     </div>
   );
 };
 
-const StartButton = () => {
+const StartButton = ({ onShutdown }: { onShutdown?: () => void }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -94,7 +106,7 @@ const StartButton = () => {
       >
         ⊞
       </button>
-      <StartMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <StartMenu open={menuOpen} onClose={() => setMenuOpen(false)} onShutdown={onShutdown} />
     </div>
   );
 };
