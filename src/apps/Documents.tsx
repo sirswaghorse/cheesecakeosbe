@@ -44,6 +44,8 @@ const Documents = () => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [previewType, setPreviewType] = useState<string>("");
   const [msg, setMsg] = useState("");
+  const [renamingId, setRenamingId] = useState<string | null>(null);
+  const [renameValue, setRenameValue] = useState("");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -107,9 +109,22 @@ const Documents = () => {
   };
 
   const handlePreview = (file: UserFile) => {
+    if (renamingId) return;
     const { data } = supabase.storage.from("user-files").getPublicUrl(file.storage_path);
     setPreviewUrl(data.publicUrl);
     setPreviewType(file.file_type);
+  };
+
+  const startRename = (file: UserFile) => {
+    setRenamingId(file.id);
+    setRenameValue(file.file_name);
+  };
+
+  const confirmRename = async () => {
+    if (!renamingId || !renameValue.trim()) return;
+    await supabase.from("user_files").update({ file_name: renameValue.trim() }).eq("id", renamingId);
+    setRenamingId(null);
+    fetchFiles();
   };
 
   const filtered = files.filter((f) =>
@@ -200,13 +215,42 @@ const Documents = () => {
                 >
                   <span className="text-base">{getFileIcon(file.file_type)}</span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium truncate" style={{ color: "hsl(210 20% 20%)" }}>
-                      {file.file_name}
-                    </p>
-                    <p className="text-[10px]" style={{ color: "hsl(210 15% 55%)" }}>
-                      {formatSize(file.file_size)} · {new Date(file.created_at).toLocaleDateString()}
-                    </p>
+                    {renamingId === file.id ? (
+                      <form
+                        className="flex items-center gap-1"
+                        onSubmit={(e) => { e.preventDefault(); confirmRename(); }}
+                      >
+                        <input
+                          autoFocus
+                          value={renameValue}
+                          onChange={(e) => setRenameValue(e.target.value)}
+                          onBlur={confirmRename}
+                          onKeyDown={(e) => { if (e.key === "Escape") setRenamingId(null); }}
+                          className="text-xs px-1 py-0.5 rounded border outline-none w-full"
+                          style={{ borderColor: "hsl(210 50% 70%)", color: "hsl(210 20% 15%)" }}
+                        />
+                      </form>
+                    ) : (
+                      <>
+                        <p className="text-xs font-medium truncate" style={{ color: "hsl(210 20% 20%)" }}>
+                          {file.file_name}
+                        </p>
+                        <p className="text-[10px]" style={{ color: "hsl(210 15% 55%)" }}>
+                          {formatSize(file.file_size)} · {new Date(file.created_at).toLocaleDateString()}
+                        </p>
+                      </>
+                    )}
                   </div>
+                  {renamingId !== file.id && (
+                    <button
+                      className="opacity-0 group-hover:opacity-100 text-xs px-1.5 py-0.5 rounded transition-opacity"
+                      style={{ color: "hsl(210 50% 40%)" }}
+                      onClick={(e) => { e.stopPropagation(); startRename(file); }}
+                      title="Rename"
+                    >
+                      ✏️
+                    </button>
+                  )}
                   <button
                     className="opacity-0 group-hover:opacity-100 text-xs px-1.5 py-0.5 rounded transition-opacity"
                     style={{ background: "hsl(0 60% 50%)", color: "white" }}
