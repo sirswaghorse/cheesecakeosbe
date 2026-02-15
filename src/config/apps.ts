@@ -6,6 +6,7 @@ const Pictures = lazy(() => import("@/apps/Pictures"));
 const AboutDemo = lazy(() => import("@/apps/AboutDemo"));
 const AuthApp = lazy(() => import("@/apps/AuthApp"));
 const ControlPanel = lazy(() => import("@/apps/ControlPanel"));
+const Browser = lazy(() => import("@/apps/Browser"));
 
 export const appRegistry: AppConfig[] = [
   {
@@ -57,6 +58,16 @@ export const appRegistry: AppConfig[] = [
     component: ControlPanel,
     desktopIcon: false,
     startMenu: false,
+  },
+  {
+    id: "browser",
+    name: "Internet",
+    icon: "🌐",
+    defaultWidth: 800,
+    defaultHeight: 550,
+    component: Browser,
+    desktopIcon: true,
+    startMenu: true,
   },
 ];
 
