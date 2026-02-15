@@ -124,8 +124,22 @@ export const WindowProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+const defaultContext: WindowContextType = {
+  windows: [],
+  openApp: () => {},
+  closeWindow: () => {},
+  minimizeWindow: () => {},
+  toggleMaximize: () => {},
+  focusWindow: () => {},
+  moveWindow: () => {},
+  taskbarClick: () => {},
+};
+
 export const useWindows = () => {
   const ctx = useContext(WindowContext);
-  if (!ctx) throw new Error("useWindows must be inside WindowProvider");
+  if (!ctx) {
+    console.warn("useWindows called outside WindowProvider, returning defaults");
+    return defaultContext;
+  }
   return ctx;
 };
