@@ -30,7 +30,7 @@ const AVAILABLE_APPS: StoreApp[] = [
   { id: "camera", name: "Camera", icon: "📷", description: "Webcam capture & filters", category: "Creative" },
   { id: "podcast", name: "Podcasts", icon: "🎙️", description: "Listen to your favorite shows", category: "Entertainment" },
   { id: "fitness", name: "Fitness", icon: "💪", description: "Workout tracker & health stats", category: "Health" },
-  { id: "h-archive", name: "H Archive", icon: "❤️", description: "Online archive browser", category: "Internet" },
+  { id: "h-archive", name: "H Archive", icon: "❤️", description: "Online 18+ archive browser", category: "Internet" },
 ];
 
 const INSTALLED_IDS = ["notepad", "pictures", "about", "browser", "videoplayer", "documents"];
