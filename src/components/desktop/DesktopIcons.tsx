@@ -1,5 +1,6 @@
 import { appRegistry } from "@/config/apps";
 import { useWindows } from "@/contexts/WindowContext";
+import { useInstalledApps } from "@/contexts/InstalledAppsContext";
 import winampLogo from "@/assets/winamp-logo.png";
 
 interface DesktopIconsProps {
@@ -8,7 +9,10 @@ interface DesktopIconsProps {
 
 const DesktopIcons = ({ onWebampOpen }: DesktopIconsProps) => {
   const { openApp } = useWindows();
-  const desktopApps = appRegistry.filter((a) => a.desktopIcon);
+  const { installedAppIds } = useInstalledApps();
+  const desktopApps = appRegistry.filter(
+    (a) => a.desktopIcon || installedAppIds.has(a.id)
+  );
 
   return (
     <div className="absolute top-4 left-4 flex flex-col gap-1">

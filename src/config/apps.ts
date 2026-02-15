@@ -10,6 +10,7 @@ const Browser = lazy(() => import("@/apps/Browser"));
 const Documents = lazy(() => import("@/apps/Documents"));
 const VideoPlayer = lazy(() => import("@/apps/VideoPlayer"));
 const AppStore = lazy(() => import("@/apps/AppStore"));
+const HArchive = lazy(() => import("@/apps/HArchive"));
 
 export const appRegistry: AppConfig[] = [
   {
@@ -101,6 +102,16 @@ export const appRegistry: AppConfig[] = [
     component: AppStore,
     desktopIcon: true,
     startMenu: true,
+  },
+  {
+    id: "h-archive",
+    name: "H Archive",
+    icon: "❤️",
+    defaultWidth: 800,
+    defaultHeight: 550,
+    component: HArchive,
+    desktopIcon: false,
+    startMenu: false,
   },
 ];
 
