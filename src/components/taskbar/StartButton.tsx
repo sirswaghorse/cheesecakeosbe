@@ -5,7 +5,7 @@ import { useWindows } from "@/contexts/WindowContext";
 const startMenuApps = appRegistry.filter((a) => a.startMenu);
 
 const rightItems = [
-  { icon: "💻", label: "Computer" },
+  { icon: "💻", label: "Computer", appId: "computer" },
   { icon: "📂", label: "Documents", appId: "documents" },
   { icon: "⚙️", label: "Control Panel", appId: "controlpanel" },
 ];
