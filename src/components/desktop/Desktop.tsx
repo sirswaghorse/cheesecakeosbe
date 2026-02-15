@@ -2,7 +2,11 @@ import wallpaper from "@/assets/wallpaper.jpg";
 import DesktopIcons from "./DesktopIcons";
 import WindowManager from "@/components/window/WindowManager";
 
-const Desktop = () => {
+interface DesktopProps {
+  onWebampOpen?: () => void;
+}
+
+const Desktop = ({ onWebampOpen }: DesktopProps) => {
   return (
     <div
       className="fixed inset-0 pb-12 overflow-hidden"
@@ -12,7 +16,7 @@ const Desktop = () => {
         backgroundPosition: "center",
       }}
     >
-      <DesktopIcons />
+      <DesktopIcons onWebampOpen={onWebampOpen} />
       <WindowManager />
     </div>
   );
