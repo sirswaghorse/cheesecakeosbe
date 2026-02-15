@@ -11,19 +11,44 @@ const DEFAULT_TRACKS = [
 
 /**
  * Hook that manages a Webamp instance.
- * Returns { open, isOpen } — call open() to launch the player.
+ * Renders into a persistent container div so it doesn't hijack the page.
  */
 export const useWebamp = () => {
   const webampRef = useRef<Webamp | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
+  // Create persistent container on mount
+  useEffect(() => {
+    const container = document.createElement("div");
+    container.id = "webamp-container";
+    container.style.position = "fixed";
+    container.style.top = "0";
+    container.style.left = "0";
+    container.style.width = "100%";
+    container.style.height = "100%";
+    container.style.pointerEvents = "none";
+    container.style.zIndex = "9000";
+    document.body.appendChild(container);
+    containerRef.current = container;
+
+    return () => {
+      container.remove();
+    };
+  }, []);
+
   const open = useCallback(() => {
-    if (webampRef.current) return; // already open
+    if (webampRef.current || !containerRef.current) return;
 
     const webamp = new Webamp({ initialTracks: DEFAULT_TRACKS });
     webampRef.current = webamp;
 
-    webamp.renderWhenReady(document.body).then(() => {
+    webamp.renderWhenReady(containerRef.current).then(() => {
+      // Make the webamp element itself interactive
+      const webampEl = document.getElementById("webamp");
+      if (webampEl) {
+        webampEl.style.pointerEvents = "auto";
+      }
       setIsOpen(true);
     });
 
@@ -34,7 +59,6 @@ export const useWebamp = () => {
     });
   }, []);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (webampRef.current) {
