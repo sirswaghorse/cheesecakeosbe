@@ -11,6 +11,7 @@ const Documents = lazy(() => import("@/apps/Documents"));
 const VideoPlayer = lazy(() => import("@/apps/VideoPlayer"));
 const AppStore = lazy(() => import("@/apps/AppStore"));
 const HArchive = lazy(() => import("@/apps/HArchive"));
+const Computer = lazy(() => import("@/apps/Computer"));
 
 export const appRegistry: AppConfig[] = [
   {
@@ -110,6 +111,16 @@ export const appRegistry: AppConfig[] = [
     defaultWidth: 800,
     defaultHeight: 550,
     component: HArchive,
+    desktopIcon: false,
+    startMenu: false,
+  },
+  {
+    id: "computer",
+    name: "Computer",
+    icon: "💻",
+    defaultWidth: 420,
+    defaultHeight: 480,
+    component: Computer,
     desktopIcon: false,
     startMenu: false,
   },
