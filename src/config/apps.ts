@@ -4,6 +4,7 @@ import type { AppConfig } from "@/types/windows";
 const Notepad = lazy(() => import("@/apps/Notepad"));
 const Pictures = lazy(() => import("@/apps/Pictures"));
 const AboutDemo = lazy(() => import("@/apps/AboutDemo"));
+const AuthApp = lazy(() => import("@/apps/AuthApp"));
 
 export const appRegistry: AppConfig[] = [
   {
@@ -35,6 +36,16 @@ export const appRegistry: AppConfig[] = [
     component: AboutDemo,
     desktopIcon: true,
     startMenu: true,
+  },
+  {
+    id: "auth",
+    name: "User Account",
+    icon: "👤",
+    defaultWidth: 340,
+    defaultHeight: 380,
+    component: AuthApp,
+    desktopIcon: false,
+    startMenu: false,
   },
 ];
 
