@@ -5,6 +5,7 @@ const Notepad = lazy(() => import("@/apps/Notepad"));
 const Pictures = lazy(() => import("@/apps/Pictures"));
 const AboutDemo = lazy(() => import("@/apps/AboutDemo"));
 const AuthApp = lazy(() => import("@/apps/AuthApp"));
+const ControlPanel = lazy(() => import("@/apps/ControlPanel"));
 
 export const appRegistry: AppConfig[] = [
   {
@@ -44,6 +45,16 @@ export const appRegistry: AppConfig[] = [
     defaultWidth: 340,
     defaultHeight: 380,
     component: AuthApp,
+    desktopIcon: false,
+    startMenu: false,
+  },
+  {
+    id: "controlpanel",
+    name: "Control Panel",
+    icon: "⚙️",
+    defaultWidth: 450,
+    defaultHeight: 420,
+    component: ControlPanel,
     desktopIcon: false,
     startMenu: false,
   },
