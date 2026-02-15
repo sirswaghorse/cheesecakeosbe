@@ -1,5 +1,6 @@
 import { useEffect, useRef, useCallback, useState } from "react";
 import Webamp from "webamp";
+import { supabase } from "@/integrations/supabase/client";
 
 const DEFAULT_TRACKS = [
   {
@@ -8,6 +9,26 @@ const DEFAULT_TRACKS = [
     duration: 5.322286,
   },
 ];
+
+async function getUserAudioTracks() {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session?.user) return [];
+
+  const { data: files } = await supabase
+    .from("user_files")
+    .select("file_name, file_type, storage_path")
+    .like("file_type", "audio/%");
+
+  if (!files || files.length === 0) return [];
+
+  return files.map((f) => {
+    const { data } = supabase.storage.from("user-files").getPublicUrl(f.storage_path);
+    return {
+      metaData: { artist: "My Music", title: f.file_name },
+      url: data.publicUrl,
+    };
+  });
+}
 
 /**
  * Hook that manages a Webamp instance.
@@ -37,14 +58,17 @@ export const useWebamp = () => {
     };
   }, []);
 
-  const open = useCallback(() => {
+  const open = useCallback(async () => {
     if (webampRef.current || !containerRef.current) return;
 
-    const webamp = new Webamp({ initialTracks: DEFAULT_TRACKS });
+    // Load user audio files, fall back to defaults
+    const userTracks = await getUserAudioTracks();
+    const tracks = userTracks.length > 0 ? userTracks : DEFAULT_TRACKS;
+
+    const webamp = new Webamp({ initialTracks: tracks });
     webampRef.current = webamp;
 
     webamp.renderWhenReady(containerRef.current).then(() => {
-      // Make the webamp element itself interactive
       const webampEl = document.getElementById("webamp");
       if (webampEl) {
         webampEl.style.pointerEvents = "auto";
