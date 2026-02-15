@@ -9,6 +9,7 @@ const ControlPanel = lazy(() => import("@/apps/ControlPanel"));
 const Browser = lazy(() => import("@/apps/Browser"));
 const Documents = lazy(() => import("@/apps/Documents"));
 const VideoPlayer = lazy(() => import("@/apps/VideoPlayer"));
+const AppStore = lazy(() => import("@/apps/AppStore"));
 
 export const appRegistry: AppConfig[] = [
   {
@@ -88,6 +89,16 @@ export const appRegistry: AppConfig[] = [
     defaultWidth: 640,
     defaultHeight: 480,
     component: VideoPlayer,
+    desktopIcon: true,
+    startMenu: true,
+  },
+  {
+    id: "appstore",
+    name: "HS Apps",
+    icon: "🏪",
+    defaultWidth: 420,
+    defaultHeight: 520,
+    component: AppStore,
     desktopIcon: true,
     startMenu: true,
   },
