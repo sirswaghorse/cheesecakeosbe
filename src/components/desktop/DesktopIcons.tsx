@@ -1,7 +1,11 @@
 import { appRegistry } from "@/config/apps";
 import { useWindows } from "@/contexts/WindowContext";
 
-const DesktopIcons = () => {
+interface DesktopIconsProps {
+  onWebampOpen?: () => void;
+}
+
+const DesktopIcons = ({ onWebampOpen }: DesktopIconsProps) => {
   const { openApp } = useWindows();
   const desktopApps = appRegistry.filter((a) => a.desktopIcon);
 
@@ -17,6 +21,14 @@ const DesktopIcons = () => {
           <span className="text-xs text-white drop-shadow-md leading-tight">{app.name}</span>
         </div>
       ))}
+      {/* Webamp — launches its own floating UI */}
+      <div
+        className="win-desktop-icon"
+        onDoubleClick={onWebampOpen}
+      >
+        <span className="text-3xl drop-shadow-md">🎵</span>
+        <span className="text-xs text-white drop-shadow-md leading-tight">Winamp</span>
+      </div>
     </div>
   );
 };
