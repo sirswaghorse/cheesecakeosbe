@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 const AuthApp = () => {
@@ -7,6 +7,7 @@ const AuthApp = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [rememberMe, setRememberMe] = useState(true);
   const [user, setUser] = useState<any>(null);
 
   // Check current session on mount
@@ -20,6 +21,17 @@ const AuthApp = () => {
     return () => subscription.unsubscribe();
   });
 
+  // Sign out on browser close if "Remember me" was unchecked
+  useEffect(() => {
+    const handleUnload = () => {
+      if (sessionStorage.getItem("hos_no_persist") === "1") {
+        supabase.auth.signOut();
+      }
+    };
+    window.addEventListener("beforeunload", handleUnload);
+    return () => window.removeEventListener("beforeunload", handleUnload);
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -27,8 +39,17 @@ const AuthApp = () => {
 
     if (isLogin) {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) setMessage(error.message);
-      else setMessage("Logged in!");
+      if (error) {
+        setMessage(error.message);
+      } else {
+        if (!rememberMe) {
+          // Store flag so we can clear session when the browser closes
+          sessionStorage.setItem("hos_no_persist", "1");
+        } else {
+          sessionStorage.removeItem("hos_no_persist");
+        }
+        setMessage("Logged in!");
+      }
     } else {
       const { error } = await supabase.auth.signUp({
         email,
@@ -112,6 +133,18 @@ const AuthApp = () => {
             color: "hsl(210 20% 20%)",
           }}
         />
+
+        {isLogin && (
+          <label className="flex items-center gap-1.5 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              className="w-3.5 h-3.5 accent-[hsl(210,60%,50%)]"
+            />
+            <span className="text-xs" style={{ color: "hsl(210 15% 40%)" }}>Remember me</span>
+          </label>
+        )}
 
         <button
           type="submit"
