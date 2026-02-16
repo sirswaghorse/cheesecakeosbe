@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import type { AppConfig } from "@/types/windows";
+import hippoIcon from "@/assets/hippo-stats-icon.png";
 
 const Notepad = lazy(() => import("@/apps/Notepad"));
 const Pictures = lazy(() => import("@/apps/Pictures"));
@@ -12,6 +13,7 @@ const VideoPlayer = lazy(() => import("@/apps/VideoPlayer"));
 const AppStore = lazy(() => import("@/apps/AppStore"));
 const HArchive = lazy(() => import("@/apps/HArchive"));
 const Computer = lazy(() => import("@/apps/Computer"));
+const HippoStats = lazy(() => import("@/apps/HippoStats"));
 
 export const appRegistry: AppConfig[] = [
   {
@@ -121,6 +123,16 @@ export const appRegistry: AppConfig[] = [
     defaultWidth: 420,
     defaultHeight: 480,
     component: Computer,
+    desktopIcon: false,
+    startMenu: false,
+  },
+  {
+    id: "hippo-stats",
+    name: "Hippo Stats",
+    icon: hippoIcon,
+    defaultWidth: 480,
+    defaultHeight: 520,
+    component: HippoStats,
     desktopIcon: false,
     startMenu: false,
   },

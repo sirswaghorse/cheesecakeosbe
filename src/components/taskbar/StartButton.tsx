@@ -62,7 +62,11 @@ const StartMenu = ({
               className="win-menu-item"
               onClick={() => { openApp(app.id); onClose(); }}
             >
-              <span className="text-lg">{app.icon}</span>
+              {app.icon.startsWith("/") || app.icon.includes("/") ? (
+                <img src={app.icon} alt={app.name} className="w-5 h-5 rounded object-cover" />
+              ) : (
+                <span className="text-lg">{app.icon}</span>
+              )}
               <span>{app.name}</span>
             </div>
           ))}

@@ -63,7 +63,11 @@ const Window = ({ win }: WindowProps) => {
         onMouseDown={onMouseDown}
         onDoubleClick={() => toggleMaximize(win.id)}
       >
-        <span className="text-sm">{app.icon}</span>
+        {app.icon.startsWith("/") || app.icon.includes("/") ? (
+          <img src={app.icon} alt={app.name} className="w-4 h-4 rounded object-cover" />
+        ) : (
+          <span className="text-sm">{app.icon}</span>
+        )}
         <span className="text-xs font-medium text-white/90 flex-1 truncate">{app.name}</span>
         <div className="flex gap-0.5">
           <button

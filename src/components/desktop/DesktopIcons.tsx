@@ -22,7 +22,11 @@ const DesktopIcons = ({ onWebampOpen }: DesktopIconsProps) => {
           className="win-desktop-icon"
           onDoubleClick={() => openApp(app.id)}
         >
-          <span className="text-3xl drop-shadow-md">{app.icon}</span>
+          {app.icon.startsWith("/") || app.icon.includes("/") ? (
+            <img src={app.icon} alt={app.name} className="w-8 h-8 drop-shadow-md rounded object-cover" />
+          ) : (
+            <span className="text-3xl drop-shadow-md">{app.icon}</span>
+          )}
           <span className="text-xs text-white drop-shadow-md leading-tight">{app.name}</span>
         </div>
       ))}

@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import hippoIcon from "@/assets/hippo-stats-icon.png";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -31,6 +32,7 @@ const AVAILABLE_APPS: StoreApp[] = [
   { id: "podcast", name: "Podcasts", icon: "🎙️", description: "Listen to your favorite shows", category: "Entertainment" },
   { id: "fitness", name: "Fitness", icon: "💪", description: "Workout tracker & health stats", category: "Health" },
   { id: "h-archive", name: "H Archive", icon: "❤️", description: "Online 18+ archive browser", category: "Internet" },
+  { id: "hippo-stats", name: "Hippo Stats", icon: hippoIcon, description: "Second Life / Kitely region stats monitor", category: "Utilities" },
 ];
 
 const INSTALLED_IDS = ["notepad", "pictures", "about", "browser", "videoplayer", "documents"];
@@ -46,7 +48,11 @@ const INSTALLED_APPS: StoreApp[] = [
 
 const AppCard = ({ app, installed, isDefault, onAction }: { app: StoreApp; installed: boolean; isDefault: boolean; onAction: () => void }) => (
   <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-[hsl(220_14%_92%)] transition-colors">
-    <span className="text-3xl shrink-0">{app.icon}</span>
+    {app.icon.startsWith("/") || app.icon.includes("/") ? (
+      <img src={app.icon} alt={app.name} className="w-8 h-8 shrink-0 rounded object-cover" />
+    ) : (
+      <span className="text-3xl shrink-0">{app.icon}</span>
+    )}
     <div className="flex-1 min-w-0">
       <div className="font-medium text-sm text-[hsl(220_10%_20%)] truncate">{app.name}</div>
       <div className="text-xs text-[hsl(210_10%_50%)] truncate">{app.description}</div>
