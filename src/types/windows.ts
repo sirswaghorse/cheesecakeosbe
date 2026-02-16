@@ -3,7 +3,7 @@ import { ComponentType } from "react";
 export interface AppConfig {
   id: string;
   name: string;
-  icon: string; // emoji for v1
+  icon: string; // emoji or image URL
   defaultWidth: number;
   defaultHeight: number;
   component: ComponentType;
