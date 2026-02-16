@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      installed_apps: {
+        Row: {
+          app_id: string
+          id: string
+          installed_at: string
+          user_id: string
+        }
+        Insert: {
+          app_id: string
+          id?: string
+          installed_at?: string
+          user_id: string
+        }
+        Update: {
+          app_id?: string
+          id?: string
+          installed_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_files: {
         Row: {
           created_at: string

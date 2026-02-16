@@ -69,8 +69,14 @@ const AppCard = ({ app, installed, isDefault, onAction }: { app: StoreApp; insta
 
 const AppStore = () => {
   const [search, setSearch] = useState("");
-  const [installed, setInstalled] = useState<Set<string>>(new Set(INSTALLED_IDS));
-  const { installApp, uninstallApp } = useInstalledApps();
+  const { installedAppIds, installApp, uninstallApp } = useInstalledApps();
+
+  // Merge default installed IDs with user-installed IDs from context
+  const installed = useMemo(() => {
+    const merged = new Set(INSTALLED_IDS);
+    installedAppIds.forEach((id) => merged.add(id));
+    return merged;
+  }, [installedAppIds]);
 
   const filteredStore = useMemo(() => {
     const q = search.toLowerCase();
@@ -84,16 +90,10 @@ const AppStore = () => {
   }, [installed]);
 
   const handleInstall = (id: string) => {
-    setInstalled((prev) => new Set(prev).add(id));
     installApp(id);
   };
 
   const handleUninstall = (id: string) => {
-    setInstalled((prev) => {
-      const next = new Set(prev);
-      next.delete(id);
-      return next;
-    });
     uninstallApp(id);
   };
 
