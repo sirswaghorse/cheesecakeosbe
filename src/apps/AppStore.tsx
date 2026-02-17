@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import hippoIcon from "@/assets/hippo-stats-icon.png";
+import uniIcon from "@/assets/uni-ai-icon.png";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -33,6 +34,7 @@ const AVAILABLE_APPS: StoreApp[] = [
   { id: "fitness", name: "Fitness", icon: "💪", description: "Workout tracker & health stats", category: "Health" },
   { id: "h-archive", name: "H Archive", icon: "❤️", description: "Online 18+ archive browser", category: "Internet" },
   { id: "hippo-stats", name: "Hippo Stats", icon: hippoIcon, description: "Second Life / Kitely region stats monitor", category: "Utilities" },
+  { id: "uni-ai", name: "Uni AI", icon: uniIcon, description: "AI-powered assistant from Furbit", category: "Internet" },
 ];
 
 const INSTALLED_IDS = ["notepad", "pictures", "about", "browser", "videoplayer", "documents"];

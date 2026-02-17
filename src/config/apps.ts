@@ -1,6 +1,7 @@
 import { lazy } from "react";
 import type { AppConfig } from "@/types/windows";
 import hippoIcon from "@/assets/hippo-stats-icon.png";
+import uniIcon from "@/assets/uni-ai-icon.png";
 
 const Notepad = lazy(() => import("@/apps/Notepad"));
 const Pictures = lazy(() => import("@/apps/Pictures"));
@@ -14,6 +15,7 @@ const AppStore = lazy(() => import("@/apps/AppStore"));
 const HArchive = lazy(() => import("@/apps/HArchive"));
 const Computer = lazy(() => import("@/apps/Computer"));
 const HippoStats = lazy(() => import("@/apps/HippoStats"));
+const UniAI = lazy(() => import("@/apps/UniAI"));
 
 export const appRegistry: AppConfig[] = [
   {
@@ -133,6 +135,16 @@ export const appRegistry: AppConfig[] = [
     defaultWidth: 480,
     defaultHeight: 520,
     component: HippoStats,
+    desktopIcon: false,
+    startMenu: false,
+  },
+  {
+    id: "uni-ai",
+    name: "Uni AI",
+    icon: uniIcon,
+    defaultWidth: 800,
+    defaultHeight: 550,
+    component: UniAI,
     desktopIcon: false,
     startMenu: false,
   },
