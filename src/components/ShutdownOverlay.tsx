@@ -9,14 +9,14 @@ const ShutdownOverlay = ({ phase }: { phase: "shuttingDown" | "booting" }) => {
           <div
             className="absolute inset-0 rounded-full border-4 border-transparent animate-spin"
             style={{
-              borderTopColor: "hsl(210 80% 60%)",
-              borderRightColor: "hsl(210 60% 40%)",
+              borderTopColor: "hsl(239 84% 74%)",
+              borderRightColor: "hsl(258 60% 55%)",
               animationDuration: "1.2s",
             }}
           />
         </div>
         <p className="text-white/80 text-lg font-light tracking-wide">
-          {isShutdown ? "Shutting down..." : "Starting HorseShoe OS..."}
+          {isShutdown ? "Shutting down..." : "Starting Cheesecake OS: Blueberry Edition..."}
         </p>
       </div>
     </div>
