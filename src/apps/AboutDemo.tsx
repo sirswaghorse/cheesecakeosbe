@@ -3,7 +3,7 @@ const AboutDemo = () => {
     <div className="h-full p-6 flex flex-col items-center justify-center text-center" style={{ background: "hsl(220 14% 96%)" }}>
       <div className="text-5xl mb-4">🖥️</div>
       <h2 className="text-lg font-bold mb-2" style={{ color: "hsl(210 20% 15%)" }}>
-        Windows 7 Desktop Simulator
+        Cheesecake OS: Blueberry Edition
       </h2>
       <p className="text-sm mb-4 max-w-xs" style={{ color: "hsl(210 15% 35%)" }}>
         A browser-based retro desktop environment inspired by Windows 7's Aero theme.
