@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { appRegistry } from "@/config/apps";
 import { useWindows } from "@/contexts/WindowContext";
+import startOrb from "@/assets/start-orb.png.asset.json";
 
 const startMenuApps = appRegistry.filter((a) => a.startMenu);
 
@@ -114,10 +115,11 @@ const StartButton = ({ onShutdown }: { onShutdown?: () => void }) => {
   return (
     <div className="relative">
       <button
-        className="win-start-btn w-12 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm ml-1 shrink-0"
+        className="w-12 h-11 flex items-center justify-center ml-1 shrink-0 transition-transform hover:scale-110 active:scale-95"
         onClick={() => setMenuOpen((v) => !v)}
+        aria-label="Start"
       >
-        ⊞
+        <img src={startOrb.url} alt="Start" className="h-11 w-auto object-contain drop-shadow-md" />
       </button>
       <StartMenu open={menuOpen} onClose={() => setMenuOpen(false)} onShutdown={onShutdown} />
     </div>
