@@ -53,7 +53,7 @@ const Window = ({ win }: WindowProps) => {
 
   return (
     <div
-      className={`absolute flex flex-col rounded-lg overflow-hidden ${isActive ? "win-window-shadow" : "win-window-shadow-inactive"}`}
+      className={`absolute flex flex-col rounded-lg overflow-hidden ${win.appId === "appstore" ? "store-window" : ""} ${isActive ? "win-window-shadow" : "win-window-shadow-inactive"}`}
       style={style}
       onMouseDown={() => focusWindow(win.id)}
     >
