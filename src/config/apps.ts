@@ -2,6 +2,7 @@ import { lazy } from "react";
 import type { AppConfig } from "@/types/windows";
 import hippoIcon from "@/assets/hippo-stats-icon.png";
 import uniIcon from "@/assets/uni-ai-icon.png";
+import storeIcon from "@/assets/cheesecake-store-icon.png";
 
 const Notepad = lazy(() => import("@/apps/Notepad"));
 const Pictures = lazy(() => import("@/apps/Pictures"));
@@ -100,10 +101,10 @@ export const appRegistry: AppConfig[] = [
   },
   {
     id: "appstore",
-    name: "HS Apps",
-    icon: "🏪",
-    defaultWidth: 420,
-    defaultHeight: 520,
+    name: "Cheesecake App Store",
+    icon: storeIcon,
+    defaultWidth: 780,
+    defaultHeight: 650,
     component: AppStore,
     desktopIcon: true,
     startMenu: true,
