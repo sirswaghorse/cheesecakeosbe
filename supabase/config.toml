@@ -1,3 +1,7 @@
 project_id = "xuzihpadvabtthufsgpr"
 [functions.cheesecake-ai]
 verify_jwt = false
+[functions.cheesecake-speech]
+verify_jwt = false
+[functions.cheesecake-transcribe]
+verify_jwt = false
