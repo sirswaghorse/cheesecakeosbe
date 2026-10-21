@@ -44,7 +44,7 @@ const CheesecakeAI = () => {
         setMsgs([...history, { role: "assistant", content: acc }]);
       }
       if (!acc.trim()) throw new Error("Cheesecake didn't reply. Please try again.");
-      playSound("notify" as never);
+      playSound("alert");
     } catch (e) {
       setMsgs(history);
       setInput(t);
