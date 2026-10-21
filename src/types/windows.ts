@@ -22,4 +22,6 @@ export interface WindowState {
   maximized: boolean;
   zIndex: number;
   focused: boolean;
+  /** Pre-snap geometry; set while the window is snapped to a screen edge */
+  restore?: { x: number; y: number; width: number; height: number };
 }
