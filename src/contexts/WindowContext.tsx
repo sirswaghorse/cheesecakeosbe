@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import { playSound } from "@/lib/sounds";
 import type { WindowState } from "@/types/windows";
 import { getApp } from "@/config/apps";
 
@@ -34,6 +35,7 @@ export const WindowProvider = ({ children }: { children: ReactNode }) => {
   const openApp = useCallback((appId: string) => {
     const app = getApp(appId);
     if (!app) return;
+    playSound("open");
     instanceCounter++;
     const id = `${appId}-${instanceCounter}`;
     nextZ++;
@@ -59,6 +61,7 @@ export const WindowProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const closeWindow = useCallback((id: string) => {
+    playSound("close");
     setWindows((prev) => prev.filter((w) => w.id !== id));
   }, []);
 
@@ -74,6 +77,7 @@ export const WindowProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const minimizeWindow = useCallback((id: string) => {
+    playSound("minimize");
     setWindows((prev) =>
       prev.map((w) =>
         w.id === id ? { ...w, minimized: true, focused: false } : w
@@ -82,6 +86,7 @@ export const WindowProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const toggleMaximize = useCallback((id: string) => {
+    playSound("snap");
     nextZ++;
     setWindows((prev) =>
       prev.map((w) =>
@@ -99,6 +104,7 @@ export const WindowProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const snapWindow = useCallback((id: string, rect: { x: number; y: number; width: number; height: number }) => {
+    playSound("snap");
     setWindows((prev) =>
       prev.map((w) =>
         w.id === id

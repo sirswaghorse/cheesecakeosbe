@@ -3,6 +3,7 @@ import { Volume2, VolumeX, Volume1, Wifi, WifiOff, Bluetooth, Lock, Check } from
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
+import { playSound } from "@/lib/sounds";
 
 const load = <T,>(k: string, d: T): T => {
   try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; }
