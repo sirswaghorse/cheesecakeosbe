@@ -1,0 +1,3 @@
+- [ ] Rebrand and redesign the Cheesecake App Store with featured apps and category browsing.
+- [ ] Add installed-app opening, protected defaults, and clearly labeled footprint estimates.
+- [ ] Verify search, installation, opening, and uninstallation through the desktop.
