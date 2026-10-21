@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CheckCircle2, RefreshCw, Monitor, Settings2, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -44,7 +44,13 @@ export function UpdateSettings() {
 interface DisplayInfo { label?: string; width: number; height: number; left?: number; top?: number; isPrimary?: boolean }
 type DisplayWindow = Window & { getScreenDetails?: () => Promise<{ screens: DisplayInfo[] }> };
 export function DisplaySettings() {
-  const [screens, setScreens] = useState<DisplayInfo[]>([{ width: window.screen.width, height: window.screen.height, isPrimary: true }]);
+  const [screens, setScreens] = useState<DisplayInfo[]>([{ width: window.screen.width, height: window.screen.height, label: "Current display" }]);
+  const [viewport, setViewport] = useState({ width: window.innerWidth, height: window.innerHeight, ratio: window.devicePixelRatio });
+  useEffect(() => {
+    const resize = () => setViewport({ width: window.innerWidth, height: window.innerHeight, ratio: window.devicePixelRatio });
+    window.addEventListener("resize", resize);
+    return () => window.removeEventListener("resize", resize);
+  }, []);
   const [message, setMessage] = useState("");
   const detect = async () => {
     const win = window as DisplayWindow;
@@ -56,7 +62,7 @@ export function DisplaySettings() {
     <div className="flex items-center gap-3"><Monitor className="size-8 text-primary" /><div><h2 className="text-lg font-semibold">Display & Monitors</h2><p className="text-xs text-muted-foreground">Connected displays & projection</p></div></div>
     <div className="flex flex-wrap justify-center gap-3 bg-secondary py-5 px-3 rounded-md" aria-label="Detected displays">{screens.map((screen, i) => <div key={i} className="w-36 text-center"><div className="aspect-video border-2 border-primary bg-primary/10 flex items-center justify-center rounded text-3xl font-semibold text-primary">{i + 1}</div><p className="text-xs mt-2">{screen.label || `Display ${i + 1}`}{screen.isPrimary ? ' · Primary' : ''}</p><p className="text-xs text-muted-foreground">{screen.width} × {screen.height}</p></div>)}</div>
     <Button variant="outline" size="sm" onClick={detect}><RefreshCw />Detect displays</Button>
-    <dl className="divide-y text-xs"><div className="flex justify-between py-3"><dt>Desktop viewport</dt><dd>{window.innerWidth} × {window.innerHeight}</dd></div><div className="flex justify-between py-3"><dt>Device pixel ratio</dt><dd>{window.devicePixelRatio}</dd></div></dl>
+    <dl className="divide-y text-xs"><div className="flex justify-between py-3"><dt>Desktop viewport</dt><dd>{viewport.width} × {viewport.height}</dd></div><div className="flex justify-between py-3"><dt>Device pixel ratio</dt><dd>{viewport.ratio}</dd></div></dl>
     <div className="space-y-3 border-t pt-4"><h3 className="text-sm font-semibold">Monitor configuration</h3><p className="text-xs text-muted-foreground">Monitor arrangement, resolution, refresh rate, scaling, and Extend / Duplicate modes are controlled by your computer, not this website.</p><div className="flex flex-wrap gap-2"><Button size="sm" variant="outline" disabled>Arrange monitors</Button><Button size="sm" variant="outline" disabled>Resolution & scaling</Button></div></div>
     <ProjectionControls />
     {message && <p role="status" className="text-xs text-primary">{message}</p>}
