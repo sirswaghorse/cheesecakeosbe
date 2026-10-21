@@ -1,5 +1,5 @@
 - [x] Rebrand and redesign the Cheesecake App Store with featured apps and category browsing.
 - [x] Add installed-app opening, protected defaults, and clearly labeled footprint estimates.
 - [x] Verify search, installation, opening, and uninstallation through the desktop.
-- [ ] Cheesecake AI taskbar button + slide-up chat (icon from upload)
+- [x] Cheesecake AI taskbar button + slide-up chat (icon from upload)
 - [ ] Cheesecake AI desktop gadget
