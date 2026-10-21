@@ -2,6 +2,7 @@ import StartButton from "./StartButton";
 import TaskbarButtons from "./TaskbarButtons";
 import Clock from "./Clock";
 import SystemTray from "./SystemTray";
+import CheesecakeAI from "./CheesecakeAI";
 import { useWindows } from "@/contexts/WindowContext";
 import {
   ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger,
@@ -14,6 +15,7 @@ const Taskbar = ({ onShutdown }: { onShutdown?: () => void }) => {
       <ContextMenuTrigger asChild>
         <div className="win-glass fixed bottom-0 left-0 right-0 h-12 flex items-center z-[9998]">
           <StartButton onShutdown={onShutdown} />
+          <CheesecakeAI />
           <TaskbarButtons />
           <div className="flex items-center gap-1 mr-1">
             <SystemTray />
