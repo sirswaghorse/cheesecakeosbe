@@ -49,7 +49,7 @@ const DesktopIcons = ({ onWebampOpen, iconSize = "medium", sortMode = "default" 
                 <span className="text-xs text-white drop-shadow-md leading-tight">{app.name}</span>
               </div>
             </ContextMenuTrigger>
-            <ContextMenuContent className="w-48">
+            <ContextMenuContent className="w-48 z-[10000]">
               <ContextMenuItem className="font-semibold" onSelect={() => openApp(app.id)}>Open</ContextMenuItem>
               <ContextMenuSeparator />
               {!isDefaultApp(app.id) && installedAppIds.has(app.id) && (
@@ -66,7 +66,7 @@ const DesktopIcons = ({ onWebampOpen, iconSize = "medium", sortMode = "default" 
               <span className="text-xs text-white drop-shadow-md leading-tight">Winamp</span>
             </div>
           </ContextMenuTrigger>
-          <ContextMenuContent className="w-48">
+          <ContextMenuContent className="w-48 z-[10000]">
             <ContextMenuItem className="font-semibold" onSelect={() => onWebampOpen?.()}>Open</ContextMenuItem>
           </ContextMenuContent>
         </ContextMenu>

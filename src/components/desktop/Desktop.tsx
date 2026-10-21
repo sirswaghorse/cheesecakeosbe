@@ -36,10 +36,10 @@ const Desktop = ({ onWebampOpen }: DesktopProps) => {
             </div>
           </div>
         </ContextMenuTrigger>
-        <ContextMenuContent className="w-52">
+        <ContextMenuContent className="w-52 z-[10000]">
           <ContextMenuSub>
             <ContextMenuSubTrigger>View</ContextMenuSubTrigger>
-            <ContextMenuSubContent>
+            <ContextMenuSubContent className="z-[10000]">
               <ContextMenuRadioGroup value={iconSize} onValueChange={changeSize}>
                 <ContextMenuRadioItem value="large">Large icons</ContextMenuRadioItem>
                 <ContextMenuRadioItem value="medium">Medium icons</ContextMenuRadioItem>
@@ -49,7 +49,7 @@ const Desktop = ({ onWebampOpen }: DesktopProps) => {
           </ContextMenuSub>
           <ContextMenuSub>
             <ContextMenuSubTrigger>Sort by</ContextMenuSubTrigger>
-            <ContextMenuSubContent>
+            <ContextMenuSubContent className="z-[10000]">
               <ContextMenuRadioGroup value={sortMode} onValueChange={changeSort}>
                 <ContextMenuRadioItem value="default">Default order</ContextMenuRadioItem>
                 <ContextMenuRadioItem value="name">Name</ContextMenuRadioItem>
@@ -60,7 +60,7 @@ const Desktop = ({ onWebampOpen }: DesktopProps) => {
           <ContextMenuSeparator />
           <ContextMenuSub>
             <ContextMenuSubTrigger>New</ContextMenuSubTrigger>
-            <ContextMenuSubContent>
+            <ContextMenuSubContent className="z-[10000]">
               <ContextMenuItem onSelect={() => openApp("notepad")}>Text Document</ContextMenuItem>
             </ContextMenuSubContent>
           </ContextMenuSub>

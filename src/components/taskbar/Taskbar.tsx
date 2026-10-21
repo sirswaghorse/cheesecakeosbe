@@ -29,7 +29,7 @@ const Taskbar = ({ onShutdown }: { onShutdown?: () => void }) => {
           />
         </div>
       </ContextMenuTrigger>
-      <ContextMenuContent className="w-52 z-[9999]">
+      <ContextMenuContent className="w-52 z-[10000]">
         <ContextMenuItem onSelect={() => toggleShowDesktop()}>Show the desktop</ContextMenuItem>
         <ContextMenuItem onSelect={() => openApp("taskmanager")}>Start Task Manager</ContextMenuItem>
         <ContextMenuSeparator />
