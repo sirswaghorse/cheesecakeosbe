@@ -5,11 +5,20 @@ import startOrb from "@/assets/start-orb.png.asset.json";
 
 const startMenuApps = appRegistry.filter((a) => a.startMenu);
 
+const searchableApps = appRegistry.filter((a) => a.id !== "auth");
+
 const rightItems = [
   { icon: "💻", label: "Computer", appId: "computer" },
   { icon: "📂", label: "Documents", appId: "documents" },
   { icon: "⚙️", label: "Control Panel", appId: "controlpanel" },
 ];
+
+const renderIcon = (app: { icon: string; name: string }) =>
+  app.icon.startsWith("/") || app.icon.includes("/") ? (
+    <img src={app.icon} alt={app.name} className="w-5 h-5 rounded object-cover" />
+  ) : (
+    <span className="text-lg">{app.icon}</span>
+  );
 
 const StartMenu = ({
   open,
