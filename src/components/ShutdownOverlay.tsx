@@ -1,5 +1,9 @@
+import { useEffect } from "react";
+import { playSound } from "@/lib/sounds";
+
 const ShutdownOverlay = ({ phase }: { phase: "shuttingDown" | "booting" }) => {
   const isShutdown = phase === "shuttingDown";
+  useEffect(() => { playSound(isShutdown ? "shutdown" : "startup"); }, [isShutdown]);
 
   return (
     <div className="fixed inset-0 z-[99999] bg-black flex flex-col items-center justify-center animate-fade-in">

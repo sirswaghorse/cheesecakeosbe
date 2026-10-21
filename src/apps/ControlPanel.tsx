@@ -1,10 +1,11 @@
+import { SOUND_LABELS, playSound, soundsEnabled, setSoundsEnabled, type SoundName } from "@/lib/sounds";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useWallpaper } from "@/contexts/WallpaperContext";
 import { wallpaperPresets, toBackgroundImage } from "@/config/wallpaperPresets";
 
 const ControlPanel = () => {
-  const [activeTab, setActiveTab] = useState<"account" | "wallpaper">("wallpaper");
+  const [activeTab, setActiveTab] = useState<"account" | "wallpaper" | "sounds">("wallpaper");
   const [user, setUser] = useState<any>(null);
   const [message, setMessage] = useState("");
   const { wallpaper, setWallpaper } = useWallpaper();
@@ -59,6 +60,7 @@ const ControlPanel = () => {
   const tabs = [
     { id: "account" as const, label: "Account", icon: "👤" },
     { id: "wallpaper" as const, label: "Wallpaper", icon: "🖼️" },
+    { id: "sounds" as const, label: "Sounds", icon: "🔔" },
   ];
 
   const inputStyle: React.CSSProperties = {
@@ -189,6 +191,8 @@ const ControlPanel = () => {
           </div>
         )}
 
+        {activeTab === "sounds" && <SoundsTab />}
+
         {message && (
           <p className="text-xs mt-3 px-2 py-1.5 rounded" style={{ background: "hsl(210 40% 92%)", color: "hsl(210 50% 40%)" }}>
             {message}
@@ -200,3 +204,24 @@ const ControlPanel = () => {
 };
 
 export default ControlPanel;
+
+const SoundsTab = () => {
+  const [on, setOn] = useState(soundsEnabled());
+  return (
+    <div className="flex flex-col gap-3">
+      <h3 className="text-sm font-semibold" style={{ color: "hsl(210 20% 25%)" }}>Cheesecake Chimes</h3>
+      <label className="flex items-center gap-2 text-xs" style={{ color: "hsl(210 20% 30%)" }}>
+        <input type="checkbox" checked={on} onChange={(e) => { setOn(e.target.checked); setSoundsEnabled(e.target.checked); }} />
+        Play system sounds
+      </label>
+      <p className="text-[11px]" style={{ color: "hsl(210 15% 45%)" }}>Sounds follow the taskbar volume and mute settings.</p>
+      <div className="grid grid-cols-2 gap-2">
+        {(Object.keys(SOUND_LABELS) as SoundName[]).map((s) => (
+          <button key={s} onClick={() => playSound(s, true)} className="flex items-center justify-between px-3 py-2 rounded text-xs" style={{ background: "hsl(210 25% 90%)", color: "hsl(210 20% 25%)" }}>
+            {SOUND_LABELS[s]} <span>▶</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
