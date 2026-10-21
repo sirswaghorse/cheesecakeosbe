@@ -3,6 +3,7 @@ import { Volume2, VolumeX, Volume1, Wifi, WifiOff, Bluetooth, Lock, Check } from
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
+import { playSound } from "@/lib/sounds";
 
 const load = <T,>(k: string, d: T): T => {
   try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; }
@@ -53,7 +54,7 @@ const VolumeFlyout = () => {
           <button aria-label={muted ? "Unmute" : "Mute"} onClick={() => setMuted(!muted)} className="p-1.5 rounded hover:bg-primary/30">
             <Icon className="h-5 w-5" />
           </button>
-          <Slider value={[muted ? 0 : volume]} max={100} step={1} onValueChange={([v]) => { setVolume(v); if (v > 0) setMuted(false); }} className="flex-1" />
+          <Slider value={[muted ? 0 : volume]} max={100} step={1} onValueChange={([v]) => { setVolume(v); if (v > 0) setMuted(false); }} onValueCommit={() => setTimeout(() => playSound("volume"), 0)} className="flex-1" />
           <span className="text-xs w-8 text-right tabular-nums">{muted ? 0 : volume}</span>
         </div>
       </PopoverContent>
@@ -102,7 +103,7 @@ const BluetoothFlyout = () => {
   const toggle = (id: string) => {
     setBusy(id);
     setTimeout(() => {
-      setPaired((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
+      setPaired((p) => { const on = p.includes(id); playSound(on ? "disconnect" : "connect"); return on ? p.filter((x) => x !== id) : [...p, id]; });
       setBusy(null);
     }, 900);
   };
