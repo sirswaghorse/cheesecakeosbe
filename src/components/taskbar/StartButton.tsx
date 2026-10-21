@@ -100,21 +100,54 @@ const StartMenu = ({
           <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-xl">👤</div>
           <span className="text-sm font-semibold text-white">User</span>
         </div>
-        <div className="py-2 px-2 flex-1">
-          {startMenuApps.map((app) => (
-            <div
-              key={app.id}
-              className="win-menu-item"
-              onClick={() => { openApp(app.id); onClose(); }}
-            >
-              {app.icon.startsWith("/") || app.icon.includes("/") ? (
-                <img src={app.icon} alt={app.name} className="w-5 h-5 rounded object-cover" />
-              ) : (
-                <span className="text-lg">{app.icon}</span>
-              )}
-              <span>{app.name}</span>
-            </div>
-          ))}
+        <div className="py-2 px-2 flex-1 overflow-auto">
+          {query.trim() ? (
+            results.length > 0 ? (
+              results.map((app, i) => (
+                <div
+                  key={app.id}
+                  className="win-menu-item"
+                  style={i === highlight ? { background: "hsl(210 60% 50% / 0.25)", outline: "1px solid hsl(210 60% 55% / 0.6)" } : undefined}
+                  onMouseEnter={() => setHighlight(i)}
+                  onClick={() => launch(app.id)}
+                >
+                  {renderIcon(app)}
+                  <span>{app.name}</span>
+                </div>
+              ))
+            ) : (
+              <p className="px-2 py-3 text-xs" style={{ color: "hsl(210 15% 45%)" }}>
+                No apps match "{query.trim()}"
+              </p>
+            )
+          ) : (
+            startMenuApps.map((app) => (
+              <div
+                key={app.id}
+                className="win-menu-item"
+                onClick={() => launch(app.id)}
+              >
+                {renderIcon(app)}
+                <span>{app.name}</span>
+              </div>
+            ))
+          )}
+        </div>
+        {/* Search bar */}
+        <div className="px-2 pb-2">
+          <input
+            ref={searchRef}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={onSearchKeyDown}
+            placeholder="Search apps..."
+            className="w-full px-2 py-1.5 text-xs rounded border outline-none"
+            style={{
+              background: "white",
+              borderColor: "hsl(210 30% 75%)",
+              color: "hsl(210 20% 20%)",
+            }}
+          />
         </div>
       </div>
       {/* Right panel */}
