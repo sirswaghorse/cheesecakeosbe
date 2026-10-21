@@ -103,6 +103,11 @@
     container-type: inline-size;
   }
   .store-spotlight { background: var(--store-spotlight); }
+  .settings-layout { display: flex; flex-direction: column; }
+  @container (min-width: 560px) {
+    .settings-layout { display: grid; grid-template-columns: 170px minmax(0, 1fr); }
+    .settings-nav { flex-direction: column; border-bottom: 0; border-right: 1px solid hsl(var(--border)); }
+  }
   @media (max-width: 820px) {
     .store-window { left: 8px !important; top: 12px !important; max-width: calc(100vw - 16px); max-height: calc(100dvh - 72px); }
   }
