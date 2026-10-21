@@ -40,7 +40,9 @@ const Window = ({ win }: WindowProps) => {
         // Pull a snapped window off the edge: restore its size under the cursor
         if (!d.unsnapped) {
           if (Math.abs(ev.clientX - d.startX) + Math.abs(ev.clientY - d.startY) < 6) return;
-          const rw = win.restore!.width;
+          const restore = win.restore;
+          if (!restore) return;
+          const rw = restore.width;
           const ratio = (d.startX - win.x) / win.width;
           d.winX = Math.round(ev.clientX - rw * ratio);
           d.winY = Math.max(0, ev.clientY - 14);
@@ -103,7 +105,7 @@ const Window = ({ win }: WindowProps) => {
       />
     )}
     <div
-      className={`absolute flex flex-col rounded-lg overflow-hidden ${win.appId === "appstore" ? "store-window" : ""} ${isActive ? "win-window-shadow" : "win-window-shadow-inactive"}`}
+      className={`absolute flex flex-col rounded-lg overflow-hidden ${win.appId === "appstore" || win.appId === "controlpanel" ? "store-window" : ""} ${isActive ? "win-window-shadow" : "win-window-shadow-inactive"}`}
       style={style}
       onMouseDown={() => focusWindow(win.id)}
     >

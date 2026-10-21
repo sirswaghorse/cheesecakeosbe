@@ -4,6 +4,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { playSound } from "@/lib/sounds";
+import ProjectFlyout from "./ProjectFlyout";
 
 const load = <T,>(k: string, d: T): T => {
   try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; }
@@ -140,6 +141,7 @@ const BluetoothFlyout = () => {
 
 const SystemTray = () => (
   <div className="flex items-center">
+    <ProjectFlyout />
     <BluetoothFlyout />
     <NetworkFlyout />
     <VolumeFlyout />
