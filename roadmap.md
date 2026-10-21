@@ -2,4 +2,6 @@
 - [x] Add installed-app opening, protected defaults, and clearly labeled footprint estimates.
 - [x] Verify search, installation, opening, and uninstallation through the desktop.
 - [x] Cheesecake AI taskbar button + slide-up chat (icon from upload)
-- [ ] Cheesecake AI desktop gadget
+- [ ] Cheesecake AI desktop gadget (deferred; not part of current settings work).
+- [ ] Expand Control Panel with System, Updates, and Display & Monitors.
+- [ ] Add Project / Cast taskbar shortcut and verify settings persistence and honest capability states.
