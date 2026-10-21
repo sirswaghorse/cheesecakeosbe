@@ -109,10 +109,18 @@ const CheesecakeAI = () => {
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold">Cheesecake AI</p>
             <p className="text-[11px] text-foreground/70 flex items-center gap-1">
-              <span className={`h-1.5 w-1.5 rounded-full ${busy ? "bg-accent animate-pulse" : "bg-accent"}`} />
-              {busy ? "Thinking…" : "Online & ready to help"}
+              <span className={`h-1.5 w-1.5 rounded-full ${busy || talking || hearing ? "bg-accent animate-pulse" : "bg-accent"}`} />
+              {busy ? "Thinking…" : talking ? "Talking…" : transcribing ? "Listening…" : hearing ? "Hearing you…" : handsFree ? "Hands-free on — just talk!" : "Online & ready to help"}
             </p>
           </div>
+          <button aria-label={handsFree ? "Turn off microphone" : "Talk with your voice"} title={handsFree ? "Turn off microphone" : "Hands-free voice chat"} onClick={toggleHandsFree}
+            className={`p-1.5 rounded hover:bg-primary/30 ${handsFree ? "bg-primary/40" : ""}`}>
+            {handsFree ? <Mic className="h-4 w-4" /> : <MicOff className="h-4 w-4" />}
+          </button>
+          <button aria-label={voice ? "Mute Cheesecake's voice" : "Turn on Cheesecake's voice"} title={voice ? "Voice on" : "Voice off"} onClick={() => setVoice((v) => !v)}
+            className={`p-1.5 rounded hover:bg-primary/30 ${voice ? "bg-primary/40" : ""}`}>
+            {voice ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
+          </button>
           {msgs.length > 0 && (
             <button aria-label="Clear chat" title="Clear chat" onClick={() => setMsgs([])} className="p-1.5 rounded hover:bg-primary/30">
               <Trash2 className="h-4 w-4" />
