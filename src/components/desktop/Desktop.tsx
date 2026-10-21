@@ -1,7 +1,7 @@
-import defaultWallpaperAsset from "@/assets/cheesecake_os_wallpaper.jpg.asset.json";
 import DesktopIcons from "./DesktopIcons";
 import WindowManager from "@/components/window/WindowManager";
 import { useWallpaper } from "@/contexts/WallpaperContext";
+import { toBackgroundImage } from "@/config/wallpaperPresets";
 
 interface DesktopProps {
   onWebampOpen?: () => void;
@@ -9,13 +9,12 @@ interface DesktopProps {
 
 const Desktop = ({ onWebampOpen }: DesktopProps) => {
   const { wallpaper } = useWallpaper();
-  const bgImage = wallpaper || defaultWallpaperAsset.url;
 
   return (
     <div
       className="fixed inset-0 pb-12 overflow-hidden"
       style={{
-        backgroundImage: `url(${bgImage})`,
+        backgroundImage: toBackgroundImage(wallpaper),
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}

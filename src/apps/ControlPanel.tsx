@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useWallpaper } from "@/contexts/WallpaperContext";
+import { wallpaperPresets, toBackgroundImage } from "@/config/wallpaperPresets";
 
 const ControlPanel = () => {
-  const [activeTab, setActiveTab] = useState<"account" | "wallpaper">("account");
+  const [activeTab, setActiveTab] = useState<"account" | "wallpaper">("wallpaper");
   const [user, setUser] = useState<any>(null);
   const [message, setMessage] = useState("");
-  const { setWallpaper } = useWallpaper();
+  const { wallpaper, setWallpaper } = useWallpaper();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -131,10 +132,32 @@ const ControlPanel = () => {
 
         {activeTab === "wallpaper" && (
           <div className="flex flex-col gap-4">
-            <h3 className="text-xs font-bold" style={{ color: "hsl(210 20% 30%)" }}>Desktop Background</h3>
+            <h3 className="text-xs font-bold" style={{ color: "hsl(210 20% 30%)" }}>Blueberry Collection</h3>
+            <div className="grid grid-cols-3 gap-2">
+              {wallpaperPresets.map((p) => {
+                const active = wallpaper === p.value;
+                return (
+                  <button
+                    key={p.id}
+                    aria-label={p.name}
+                    onClick={() => { setWallpaper(p.value); setMessage(`Wallpaper set to ${p.name}.`); }}
+                    className="flex flex-col gap-1 p-1 rounded text-left transition-transform hover:scale-[1.03]"
+                    style={{ border: active ? "2px solid #818cf8" : "2px solid transparent", background: "white" }}
+                  >
+                    <div
+                      className="w-full aspect-video rounded"
+                      style={{ backgroundImage: toBackgroundImage(p.value), backgroundSize: "cover", backgroundPosition: "center" }}
+                    />
+                    <span className="text-[10px] font-medium truncate" style={{ color: "hsl(230 25% 30%)" }}>{p.name}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <h3 className="text-xs font-bold" style={{ color: "hsl(210 20% 30%)" }}>Custom Background</h3>
             <p className="text-xs" style={{ color: "hsl(210 15% 50%)" }}>
               Upload an image to use as your desktop wallpaper.
             </p>
+
 
             <label
               className="flex flex-col items-center justify-center gap-2 p-6 rounded border-2 border-dashed cursor-pointer hover:bg-white/50 transition-colors"
