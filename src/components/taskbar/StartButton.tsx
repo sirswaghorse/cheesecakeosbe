@@ -31,9 +31,19 @@ const StartMenu = ({
 }) => {
   const { openApp } = useWindows();
   const ref = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const [query, setQuery] = useState("");
+  const [highlight, setHighlight] = useState(0);
+
+  const results = query.trim()
+    ? searchableApps.filter((a) => a.name.toLowerCase().includes(query.trim().toLowerCase()))
+    : [];
 
   useEffect(() => {
     if (!open) return;
+    setQuery("");
+    setHighlight(0);
+    const focusTimer = setTimeout(() => searchRef.current?.focus(), 20);
     const handler = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) {
         onClose();
@@ -43,11 +53,36 @@ const StartMenu = ({
     const timer = setTimeout(() => document.addEventListener("mousedown", handler), 10);
     return () => {
       clearTimeout(timer);
+      clearTimeout(focusTimer);
       document.removeEventListener("mousedown", handler);
     };
   }, [open, onClose]);
 
+  useEffect(() => {
+    setHighlight(0);
+  }, [query]);
+
   if (!open) return null;
+
+  const launch = (appId: string) => {
+    openApp(appId);
+    onClose();
+  };
+
+  const onSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setHighlight((h) => Math.min(h + 1, results.length - 1));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setHighlight((h) => Math.max(h - 1, 0));
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      if (results[highlight]) launch(results[highlight].id);
+    } else if (e.key === "Escape") {
+      onClose();
+    }
+  };
 
   return (
     <div
