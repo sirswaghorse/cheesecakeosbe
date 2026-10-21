@@ -1,4 +1,4 @@
-import defaultWallpaper from "@/assets/wallpaper.jpg";
+import defaultWallpaperAsset from "@/assets/cheesecake_os_wallpaper.jpg.asset.json";
 import DesktopIcons from "./DesktopIcons";
 import WindowManager from "@/components/window/WindowManager";
 import { useWallpaper } from "@/contexts/WallpaperContext";
@@ -9,7 +9,7 @@ interface DesktopProps {
 
 const Desktop = ({ onWebampOpen }: DesktopProps) => {
   const { wallpaper } = useWallpaper();
-  const bgImage = wallpaper || defaultWallpaper;
+  const bgImage = wallpaper || defaultWallpaperAsset.url;
 
   return (
     <div
