@@ -17,6 +17,7 @@ const HArchive = lazy(() => import("@/apps/HArchive"));
 const Computer = lazy(() => import("@/apps/Computer"));
 const HippoStats = lazy(() => import("@/apps/HippoStats"));
 const UniAI = lazy(() => import("@/apps/UniAI"));
+const Terminal = lazy(() => import("@/apps/Terminal"));
 
 export const appRegistry: AppConfig[] = [
   {
@@ -148,6 +149,16 @@ export const appRegistry: AppConfig[] = [
     component: UniAI,
     desktopIcon: false,
     startMenu: false,
+  },
+  {
+    id: "terminal",
+    name: "Terminal",
+    icon: "⌨️",
+    defaultWidth: 620,
+    defaultHeight: 400,
+    component: Terminal,
+    desktopIcon: true,
+    startMenu: true,
   },
 ];
 
