@@ -1,6 +1,7 @@
 import StartButton from "./StartButton";
 import TaskbarButtons from "./TaskbarButtons";
 import Clock from "./Clock";
+import SystemTray from "./SystemTray";
 import { useWindows } from "@/contexts/WindowContext";
 import {
   ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger,
@@ -15,8 +16,7 @@ const Taskbar = ({ onShutdown }: { onShutdown?: () => void }) => {
           <StartButton onShutdown={onShutdown} />
           <TaskbarButtons />
           <div className="flex items-center gap-1 mr-1">
-            <span className="text-xs text-white/60 px-1">🔊</span>
-            <span className="text-xs text-white/60 px-1">🌐</span>
+            <SystemTray />
             <Clock />
           </div>
           <button
