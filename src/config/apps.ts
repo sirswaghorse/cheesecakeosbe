@@ -18,6 +18,7 @@ const Computer = lazy(() => import("@/apps/Computer"));
 const HippoStats = lazy(() => import("@/apps/HippoStats"));
 const UniAI = lazy(() => import("@/apps/UniAI"));
 const Terminal = lazy(() => import("@/apps/Terminal"));
+const TaskManager = lazy(() => import("@/apps/TaskManager"));
 
 export const appRegistry: AppConfig[] = [
   {
@@ -157,6 +158,16 @@ export const appRegistry: AppConfig[] = [
     defaultWidth: 620,
     defaultHeight: 400,
     component: Terminal,
+    desktopIcon: true,
+    startMenu: true,
+  },
+  {
+    id: "taskmanager",
+    name: "Task Manager",
+    icon: "📊",
+    defaultWidth: 620,
+    defaultHeight: 500,
+    component: TaskManager,
     desktopIcon: true,
     startMenu: true,
   },
