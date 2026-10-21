@@ -1,13 +1,17 @@
 import { useEffect, useRef, useState } from "react";
-import { Send, Trash2 } from "lucide-react";
+import { Mic, MicOff, Send, Trash2, Volume2, VolumeX } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { playSound } from "@/lib/sounds";
+import { useHandsFree } from "@/hooks/useHandsFree";
 import avatar from "@/assets/cheesecake-ai.png.asset.json";
 
 type Msg = { role: "user" | "assistant"; content: string };
 const KEY = "cheesecake-ai-chat";
 const PROMPTS = ["What can Cheesecake OS do?", "Tell me a joke", "Give me a desktop tip", "Recommend some music"];
-const URL_ = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/cheesecake-ai`;
+const FN = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`;
+const URL_ = `${FN}/cheesecake-ai`;
+const PK = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+const AUTH = { apikey: PK, Authorization: `Bearer ${PK}` };
 
 const CheesecakeAI = () => {
   const [open, setOpen] = useState(false);
@@ -16,9 +20,30 @@ const CheesecakeAI = () => {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
+  const [voice, setVoice] = useState(() => localStorage.getItem("cc-voice") === "1");
+  const [talking, setTalking] = useState(false);
+  const [handsFree, setHandsFree] = useState(false);
+  const [transcribing, setTranscribing] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => { localStorage.setItem(KEY, JSON.stringify(msgs.slice(-40))); }, [msgs]);
   useEffect(() => { endRef.current?.scrollIntoView({ block: "end" }); }, [msgs, open, busy]);
+
+  const stopVoice = () => { audioRef.current?.pause(); audioRef.current = null; setTalking(false); };
+  useEffect(() => { localStorage.setItem("cc-voice", voice ? "1" : "0"); if (!voice) stopVoice(); }, [voice]);
+  useEffect(() => () => stopVoice(), []);
+
+  const speak = async (text: string) => {
+    stopVoice();
+    const res = await fetch(`${FN}/cheesecake-speech`, { method: "POST", headers: { "Content-Type": "application/json", ...AUTH }, body: JSON.stringify({ text }) });
+    if (!res.ok) { setError((await res.json().catch(() => null))?.error ?? "Voice unavailable"); return; }
+    const url = URL.createObjectURL(await res.blob());
+    const a = new Audio(url);
+    audioRef.current = a;
+    a.onplay = () => setTalking(true);
+    a.onended = a.onpause = () => { setTalking(false); URL.revokeObjectURL(url); };
+    a.play().catch(() => setTalking(false));
+  };
 
   const send = async (text: string) => {
     const t = text.trim();
@@ -30,7 +55,7 @@ const CheesecakeAI = () => {
     try {
       const res = await fetch(URL_, {
         method: "POST",
-        headers: { "Content-Type": "application/json", apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}` },
+        headers: { "Content-Type": "application/json", ...AUTH },
         body: JSON.stringify({ messages: history }),
       });
       if (!res.ok || !res.body) {
@@ -44,13 +69,30 @@ const CheesecakeAI = () => {
         setMsgs([...history, { role: "assistant", content: acc }]);
       }
       if (!acc.trim()) throw new Error("Cheesecake didn't reply. Please try again.");
-      playSound("alert");
+      if (voice) speak(acc.replace(/[*_#`>]/g, "")); else playSound("alert");
     } catch (e) {
       setMsgs(history);
       setInput(t);
       setError(e instanceof Error ? e.message : "Something went wrong");
     } finally { setBusy(false); }
   };
+
+  const sendRef = useRef(send);
+  sendRef.current = send;
+  const { hearing, error: micError } = useHandsFree(handsFree, busy || talking || transcribing, async (audio) => {
+    setTranscribing(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", audio, "speech.webm");
+      const res = await fetch(`${FN}/cheesecake-transcribe`, { method: "POST", headers: AUTH, body: fd });
+      const data = (await res.json().catch(() => null)) as { text?: string; error?: string } | null;
+      if (!res.ok) { setError(data?.error ?? "Couldn't hear that."); if (res.status === 402) setHandsFree(false); return; }
+      const text = data?.text?.trim();
+      if (text && text.length > 1) sendRef.current(text);
+    } finally { setTranscribing(false); }
+  });
+  useEffect(() => { if (micError) { setError(micError); setHandsFree(false); } }, [micError]);
+  const toggleHandsFree = () => setHandsFree((h) => { if (!h) setVoice(true); return !h; });
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
