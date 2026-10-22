@@ -12,3 +12,5 @@
 - [x] Document Linux setup; verify JavaScript bridge boundaries and signed-out browser upload/reload compatibility.
 - [x] Complete Tauri shell entry points, locked compile/package commands, prerequisite checks, Rust 1.90 requirement and Linux instructions; native execution still awaits a Linux desktop.
 - [ ] Compile and exercise the Tauri host, native tests and Documents launcher on Linux — blocked by missing D-Bus/WebKitGTK desktop libraries and native session in this sandbox.
+- [ ] Add safe X11 session/startup files, optional existing-desktop autostart, and installation/recovery instructions.
+- [ ] Verify Linux startup checks and session lifecycle with isolated tests; actual login-screen launch requires a Linux desktop.

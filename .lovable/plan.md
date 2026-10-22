@@ -1,31 +1,17 @@
+## Linux session and startup files
 
+### What you get
+- A **Cheesecake OS: Blueberry Edition** option at the Linux login screen, alongside the existing desktop.
+- A full-screen Cheesecake session with a lightweight Linux window manager underneath, allowing native file-manager windows to work.
+- An optional start-on-login entry for people who prefer to keep using their current Linux desktop.
+- Installation, removal, recovery and testing instructions. Automatic login stays off; no login-manager settings are changed.
 
-## Add "H Archive" App to the App Store
+### Technical details
+- Use an X11 session with Openbox, an existing display manager and a D-Bus session. Tauri is an application, not a window manager or Wayland compositor.
+- Add session launch scripts and desktop entries, plus an explicit fullscreen launch argument for the Tauri host without expanding native permissions.
+- Keep session installation a deliberate Linux administrator action; browser preview and ordinary native launches remain unchanged.
+- Test startup prerequisite failures, argument handling, child-process cleanup and configuration boundaries with isolated tools. Actual login-screen, fullscreen and native-window behavior still require a real Linux desktop.
 
-### What This Does
-Adds a new app called "H Archive" with a red heart icon to the HS Apps store. When installed, it creates a desktop icon that opens a browser window loading `https://humper.furbit.social`.
-
-### Steps
-
-1. **Add to App Store catalog** (`src/apps/AppStore.tsx`)
-   - Add an entry to `AVAILABLE_APPS` with id `h-archive`, name "H Archive", icon (red heart emoji), and category "Internet"
-
-2. **Create the H Archive component** (`src/apps/HArchive.tsx`)
-   - A simple iframe-based viewer (similar to the Browser app) that loads the target URL directly
-   - Include the "Open in new tab" fallback in case the site blocks iframes
-
-3. **Register in the app registry** (`src/config/apps.ts`)
-   - Add the app config with appropriate default window size, the heart icon, and `desktopIcon: false` / `startMenu: false` initially (since it comes from the store)
-
-4. **Make App Store installs create real desktop icons**
-   - Currently the App Store "Get" button only updates local state and doesn't actually register new apps in the system
-   - Update `WindowContext` or add a new context to track dynamically installed apps
-   - Update `DesktopIcons` to also show dynamically installed apps
-   - When "Get" is clicked in the store, the app becomes launchable and appears on the desktop
-
-### Technical Details
-
-- The H Archive app component will be an iframe wrapper similar to `Browser.tsx` but simplified (no address bar, just the content and an "open externally" button)
-- The app registry already supports lazy-loaded components, so this fits the existing pattern
-- For dynamic installs: store installed app IDs in React state (context-level) so `DesktopIcons` can render them. This keeps it session-based like the current store behavior.
+### Not included
+Bootable ISO creation, automatic login, a new compositor, privileged services, or simulated Shutdown turning off the Linux computer.
 
