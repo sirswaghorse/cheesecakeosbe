@@ -6,7 +6,7 @@
 - Store browser user files on-device (IndexedDB via src/lib/localFs.ts) and the user profile locally; cloud accounts are optional sync only, so the OS works without sign-in like a real Linux desktop.
 - Load Winamp playlists through the local-audio helper with session-owned Blob URLs and bundled skin, so saved music needs neither cloud authentication nor remote samples.
 - Use Tauri v2 for the native Linux host and a single typed platform bridge for frontend native calls, so the Vite browser desktop remains independently usable.
-- Expose only read-only system details and enum-selected XDG user-folder opening in native commands; scope IPC to the local main webview with no remote permissions or shell plugin, so embedded websites cannot control the computer.
+- Expose only read-only system details, enum-selected XDG user-folder opening and app self-exit (session end, no power-off) in native commands; scope IPC to the local main webview with no remote permissions or shell plugin, so embedded websites cannot control the computer.
 - In Linux mode Documents launches the installed system file manager; browser Documents remains a local preview and existing browser files are never silently migrated or discarded.
 - Route native development, compilation, tests and packaging through the Linux prerequisite checker and locked Cargo resolution, so missing desktop libraries fail early and native dependencies remain reproducible.
 - Ship the Linux X11 session as user-level files in linux/session (Openbox window manager, app as foreground process, no sudo/auto-login/global hooks), so testing never replaces the user's existing desktop.

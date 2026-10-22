@@ -6,6 +6,7 @@ import Desktop from "@/components/desktop/Desktop";
 import Taskbar from "@/components/taskbar/Taskbar";
 import { useWebamp } from "@/hooks/useWebamp";
 import ShutdownOverlay from "@/components/ShutdownOverlay";
+import { platformBridge } from "@/lib/platformBridge";
 
 const DesktopShell = ({ onShutdown }: { onShutdown: () => void }) => {
   const { open: openWebamp } = useWebamp();
@@ -23,7 +24,11 @@ const Index = () => {
 
   const handleShutdown = useCallback(() => {
     setPhase("shuttingDown");
-    setTimeout(() => setPhase("off"), 2000);
+    setTimeout(async () => {
+      // On Linux this ends the session; in the browser (or if it fails) show the "off" screen.
+      try { if (await platformBridge.exitSession()) return; } catch { /* fall back to simulation */ }
+      setPhase("off");
+    }, 2000);
   }, []);
 
   const handleBoot = useCallback(() => {

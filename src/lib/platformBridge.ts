@@ -14,6 +14,8 @@ export interface PlatformBridge {
   environment: "browser" | "linux";
   getSystemSummary: () => Promise<SystemSummary | null>;
   openFolder: (folder: KnownFolder) => Promise<void>;
+  /** Ends the Linux desktop session; returns false in the browser so the caller can simulate. */
+  exitSession: () => Promise<boolean>;
 }
 
 /** No paths, executables, or shell text cross IPC. */
@@ -25,6 +27,11 @@ export function createPlatformBridge(native: boolean, call: typeof invoke = invo
       if (!KNOWN_FOLDERS.includes(folder)) throw new Error("Unsupported folder.");
       if (!native) throw new Error("The system file manager is available in the Linux desktop only.");
       await call<void>("open_known_folder", { folder });
+    },
+    async exitSession() {
+      if (!native) return false;
+      await call<void>("exit_session");
+      return true;
     },
   };
 }
