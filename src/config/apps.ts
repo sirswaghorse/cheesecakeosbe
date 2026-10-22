@@ -19,6 +19,7 @@ const HippoStats = lazy(() => import("@/apps/HippoStats"));
 const UniAI = lazy(() => import("@/apps/UniAI"));
 const Terminal = lazy(() => import("@/apps/Terminal"));
 const TaskManager = lazy(() => import("@/apps/TaskManager"));
+const Calculator = lazy(() => import("@/apps/Calculator"));
 
 export const appRegistry: AppConfig[] = [
   {
@@ -168,6 +169,16 @@ export const appRegistry: AppConfig[] = [
     defaultWidth: 620,
     defaultHeight: 500,
     component: TaskManager,
+    desktopIcon: true,
+    startMenu: true,
+  },
+  {
+    id: "calculator",
+    name: "Calculator",
+    icon: "🧮",
+    defaultWidth: 280,
+    defaultHeight: 420,
+    component: Calculator,
     desktopIcon: true,
     startMenu: true,
   },

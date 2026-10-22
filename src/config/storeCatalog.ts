@@ -12,7 +12,7 @@ export interface StoreApp {
   builtIn: boolean;
 }
 
-const builtInIds = new Set(["notepad", "pictures", "about", "browser", "videoplayer", "documents", "controlpanel", "computer", "appstore", "auth", "terminal", "taskmanager"]);
+const builtInIds = new Set(["notepad", "pictures", "about", "browser", "videoplayer", "documents", "controlpanel", "computer", "appstore", "auth", "terminal", "taskmanager", "calculator"]);
 const details: Record<string, [string, string, StoreApp["type"], number]> = {
   notepad: ["A quiet place for your notes.", "Productivity", "System Tool", 1],
   pictures: ["Your uploaded images, all together.", "Creative", "System Tool", 2],
@@ -27,11 +27,11 @@ const details: Record<string, [string, string, StoreApp["type"], number]> = {
   "hippo-stats": ["Second Life / Kitely region stats monitor", "Utilities", "System Tool", 3],
   terminal: ["Linux-style shell with neofetch.", "Developer", "System Tool", 1],
   taskmanager: ["See open apps, end tasks, and watch performance.", "System", "System Tool", 1],
+  calculator: ["Quick math, right on your desktop.", "Utilities", "System Tool", 1],
   "uni-ai": ["AI-powered assistant from Furbit", "Internet", "Web App", 1],
 };
 
 const plannedApps = [
-  ["calculator", "Calculator", "🧮", "Basic & scientific calculator", "Utilities"],
   ["calendar", "Calendar", "📅", "Schedule and events manager", "Productivity"],
   ["email", "Mail", "📧", "Email client", "Communication"],
   ["maps", "Maps", "🗺️", "Explore the world", "Travel"],
