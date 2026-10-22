@@ -9,6 +9,7 @@ describe("Linux bridge boundaries", () => {
     expect(bridge.environment).toBe("browser");
     expect(await bridge.getSystemSummary()).toBeNull();
     await expect(bridge.openFolder("documents")).rejects.toThrow("Linux desktop only");
+    expect(await bridge.exitSession()).toBe(false);
     expect(call).not.toHaveBeenCalled();
   });
 
@@ -41,5 +42,16 @@ describe("Linux bridge boundaries", () => {
     const bridge = createPlatformBridge(true, call as typeof invoke);
     await expect(bridge.getSystemSummary()).rejects.toThrow("native unavailable");
     await expect(bridge.openFolder("documents")).rejects.toThrow("native unavailable");
+  });
+
+  it("ends the Linux session through the fixed exit command", async () => {
+    const call = vi.fn().mockResolvedValue(undefined);
+    expect(await createPlatformBridge(true, call as typeof invoke).exitSession()).toBe(true);
+    expect(call).toHaveBeenCalledExactlyOnceWith("exit_session");
+  });
+
+  it("reports a failed native exit so the desktop can fall back", async () => {
+    const call = vi.fn().mockRejectedValue(new Error("nope"));
+    await expect(createPlatformBridge(true, call as typeof invoke).exitSession()).rejects.toThrow("nope");
   });
 });

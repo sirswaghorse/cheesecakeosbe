@@ -1,8 +1,8 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "main-local",
-  "description": "Only the local main webview can read system details and open known user folders. No remote URLs or child webviews receive native permissions.",
+  "description": "Only the local main webview can read system details and open known user folders, and end the desktop session. No remote URLs or child webviews receive native permissions.",
   "local": true,
   "webviews": ["main"],
-  "permissions": ["allow-system-summary", "allow-open-known-folder"]
+  "permissions": ["allow-system-summary", "allow-open-known-folder", "allow-exit-session"]
 }

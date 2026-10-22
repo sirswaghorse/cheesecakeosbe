@@ -90,9 +90,18 @@ async fn open_known_folder(folder: KnownFolder) -> Result<(), String> {
     .map_err(|_| "The folder request failed.".to_string())?
 }
 
+/// Ends the Cheesecake desktop process. Inside the Openbox session the app is the
+/// foreground process, so exiting returns the user to the login screen.
+#[tauri::command]
+fn exit_session(app: tauri::AppHandle) -> Result<(), String> {
+    require_linux()?;
+    app.exit(0);
+    Ok(())
+}
+
 pub fn run() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![system_summary, open_known_folder])
+        .invoke_handler(tauri::generate_handler![system_summary, open_known_folder, exit_session])
         .run(tauri::generate_context!())
         .expect("failed to run Cheesecake OS");
 }
