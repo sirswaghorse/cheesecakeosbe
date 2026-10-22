@@ -6,3 +6,4 @@
 - [x] Expand Control Panel with System, Updates, and Display & Monitors.
 - [x] Add Project / Cast taskbar shortcut and verify settings persistence and honest capability states.
 - [x] Interactive Clock & Calendar flyout — click taskbar clock: month calendar, today highlight, month navigation, add/delete events saved per device.
+- [x] Calculator app — desktop/Start icon, keyboard support, chained operations, protected built-in.
