@@ -70,9 +70,9 @@ const AuthApp = () => {
   if (user) {
     return (
       <div className="p-4 h-full flex flex-col items-center justify-center gap-3" style={{ background: "hsl(210 30% 95%)" }}>
-        <div className="text-3xl">👤</div>
+        <div className="text-3xl">☁️</div>
         <p className="text-sm font-semibold" style={{ color: "hsl(210 20% 30%)" }}>
-          Signed in as
+          Cheesecake Cloud linked as
         </p>
         <p className="text-xs" style={{ color: "hsl(210 15% 45%)" }}>{user.email}</p>
         <button
@@ -84,7 +84,7 @@ const AuthApp = () => {
             border: "1px solid hsl(210 50% 35%)",
           }}
         >
-          Log Out
+          Unlink (sign out)
         </button>
       </div>
     );
@@ -95,9 +95,12 @@ const AuthApp = () => {
       <div className="flex items-center gap-2 mb-4">
         <span className="text-2xl">👤</span>
         <h2 className="text-sm font-bold" style={{ color: "hsl(210 20% 30%)" }}>
-          {isLogin ? "Log In" : "Register"}
+          {isLogin ? "Link Cheesecake Cloud" : "Create Cloud Account"}
         </h2>
       </div>
+      <p className="text-[11px] mb-3" style={{ color: "hsl(210 15% 45%)" }}>
+        Optional. Cheesecake OS works fully without an account — linking one syncs installed apps and wallpaper across devices.
+      </p>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-2.5 flex-1">
         <label className="text-xs font-medium" style={{ color: "hsl(210 15% 40%)" }}>
