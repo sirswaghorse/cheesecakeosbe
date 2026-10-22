@@ -13,4 +13,4 @@
 - [x] Complete Tauri shell entry points, locked compile/package commands, prerequisite checks, Rust 1.90 requirement and Linux instructions; native execution still awaits a Linux desktop.
 - [ ] Compile and exercise the Tauri host, native tests and Documents launcher on Linux — blocked by missing D-Bus/WebKitGTK desktop libraries and native session in this sandbox.
 - [ ] Linux session/startup files — deferred while local music playback is completed.
-- [ ] Make Winamp play audio saved in browser Documents without cloud sign-in or remote sample tracks; test upload, reload and offline playback.
+- [x] Make Winamp play audio saved in browser Documents without cloud sign-in or remote sample tracks; verified upload, reload, Play-button audio progress offline, and reopening; local playlist tests pass.
