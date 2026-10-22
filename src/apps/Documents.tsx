@@ -1,14 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
+import { addFile, deleteFile, renameFile, useLocalFiles, type LocalFile } from "@/lib/localFs";
 
-interface UserFile {
-  id: string;
-  file_name: string;
-  file_type: string;
-  file_size: number;
-  storage_path: string;
-  created_at: string;
-}
+type UserFile = LocalFile;
 
 const FILE_ICONS: Record<string, string> = {
   image: "🖼️",
@@ -37,81 +30,42 @@ const formatSize = (bytes: number) => {
 };
 
 const Documents = () => {
-  const [files, setFiles] = useState<UserFile[]>([]);
+const Documents = () => {
+  const { files } = useLocalFiles();
   const [search, setSearch] = useState("");
   const [uploading, setUploading] = useState(false);
-  const [user, setUser] = useState<any>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [previewType, setPreviewType] = useState<string>("");
   const [msg, setMsg] = useState("");
   const [renamingId, setRenamingId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState("");
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setUser(data.session?.user ?? null);
-    });
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
-      setUser(session?.user ?? null);
-    });
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const fetchFiles = useCallback(async () => {
-    if (!user) return;
-    const { data } = await supabase
-      .from("user_files")
-      .select("*")
-      .order("created_at", { ascending: false });
-    if (data) setFiles(data);
-  }, [user]);
-
-  useEffect(() => {
-    fetchFiles();
-  }, [fetchFiles]);
-
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !user) return;
+    const list = Array.from(e.target.files ?? []);
+    e.target.value = "";
+    if (!list.length) return;
     setUploading(true);
     setMsg("");
-
-    const path = `${user.id}/${Date.now()}_${file.name}`;
-    const { error: uploadErr } = await supabase.storage
-      .from("user-files")
-      .upload(path, file);
-
-    if (uploadErr) {
-      setMsg("Upload failed: " + uploadErr.message);
-      setUploading(false);
-      return;
+    try {
+      for (const f of list) await addFile(f);
+      setMsg(list.length > 1 ? `${list.length} files saved to this computer.` : "File saved to this computer.");
+    } catch {
+      setMsg("Couldn't save the file — this browser may be out of storage space.");
     }
-
-    await supabase.from("user_files").insert({
-      user_id: user.id,
-      file_name: file.name,
-      file_type: file.type,
-      file_size: file.size,
-      storage_path: path,
-    });
-
-    await fetchFiles();
     setUploading(false);
-    setMsg("File uploaded!");
-    setTimeout(() => setMsg(""), 2000);
+    setTimeout(() => setMsg(""), 2500);
   };
 
   const handleDelete = async (file: UserFile) => {
-    await supabase.storage.from("user-files").remove([file.storage_path]);
-    await supabase.from("user_files").delete().eq("id", file.id);
+    await deleteFile(file.id);
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(null);
-    fetchFiles();
   };
 
   const handlePreview = (file: UserFile) => {
     if (renamingId) return;
-    const { data } = supabase.storage.from("user-files").getPublicUrl(file.storage_path);
-    setPreviewUrl(data.publicUrl);
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(URL.createObjectURL(file.blob));
     setPreviewType(file.file_type);
   };
 
@@ -122,28 +76,13 @@ const Documents = () => {
 
   const confirmRename = async () => {
     if (!renamingId || !renameValue.trim()) return;
-    await supabase.from("user_files").update({ file_name: renameValue.trim() }).eq("id", renamingId);
+    await renameFile(renamingId, renameValue);
     setRenamingId(null);
-    fetchFiles();
   };
 
   const filtered = files.filter((f) =>
     f.file_name.toLowerCase().includes(search.toLowerCase())
   );
-
-  if (!user) {
-    return (
-      <div className="h-full flex flex-col items-center justify-center gap-2 p-4" style={{ background: "hsl(220 14% 96%)" }}>
-        <span className="text-3xl">📂</span>
-        <p className="text-sm font-medium" style={{ color: "hsl(210 20% 30%)" }}>
-          Please log in to access your documents.
-        </p>
-        <p className="text-xs" style={{ color: "hsl(210 15% 50%)" }}>
-          Open User Account from the Start menu.
-        </p>
-      </div>
-    );
-  }
 
   return (
     <div className="h-full flex flex-col" style={{ background: "hsl(220 14% 96%)" }}>
@@ -182,7 +121,7 @@ const Documents = () => {
           <input
             type="file"
             className="hidden"
-            onChange={handleUpload}
+            multiple onChange={handleUpload}
             disabled={uploading}
           />
         </label>
