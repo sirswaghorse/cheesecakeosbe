@@ -8,10 +8,19 @@ interface InstalledAppsContextType {
   isInstalled: (appId: string) => boolean;
 }
 
+const LOCAL_KEY = "cheesecake_installed_apps";
+
 const InstalledAppsContext = createContext<InstalledAppsContextType | null>(null);
 
 export const InstalledAppsProvider = ({ children }: { children: ReactNode }) => {
-  const [installedAppIds, setInstalledAppIds] = useState<Set<string>>(new Set());
+  const [installedAppIds, setInstalledAppIds] = useState<Set<string>>(() => {
+    try { return new Set(JSON.parse(localStorage.getItem(LOCAL_KEY) || "[]")); } catch { return new Set(); }
+  });
+
+  // Installed apps always persist on this computer
+  useEffect(() => {
+    localStorage.setItem(LOCAL_KEY, JSON.stringify([...installedAppIds]));
+  }, [installedAppIds]);
   const [userId, setUserId] = useState<string | null>(null);
 
   // Listen for auth changes and load installed apps
@@ -25,19 +34,16 @@ export const InstalledAppsProvider = ({ children }: { children: ReactNode }) => 
     return () => subscription.unsubscribe();
   }, []);
 
-  // Load installed apps from DB when user changes
+  // Optional cloud sync: merge cloud installs into the local list when signed in
   useEffect(() => {
-    if (!userId) {
-      setInstalledAppIds(new Set());
-      return;
-    }
+    if (!userId) return;
     supabase
       .from("installed_apps")
       .select("app_id")
       .eq("user_id", userId)
       .then(({ data }) => {
         if (data) {
-          setInstalledAppIds(new Set(data.map((r) => r.app_id)));
+          setInstalledAppIds((prev) => new Set([...prev, ...data.map((r) => r.app_id)]));
         }
       });
   }, [userId]);
