@@ -1,0 +1,47 @@
+#!/bin/sh
+# Cheesecake OS: Blueberry Edition — X11 session launcher.
+# Runs as the logged-in user. No sudo, no system services, no auto-login.
+# The session ends when the Cheesecake OS window exits; the login screen returns.
+set -eu
+
+CHEESECAKE_BIN="${CHEESECAKE_BIN:-/usr/bin/cheesecake-os}"
+SESSION_DIR="${CHEESECAKE_SESSION_DIR:-/usr/share/cheesecake-os/session}"
+OPENBOX_RC="$SESSION_DIR/openbox-rc.xml"
+
+if [ ! -x "$CHEESECAKE_BIN" ]; then
+  echo "cheesecake-session: $CHEESECAKE_BIN is not installed or not executable" >&2
+  exit 1
+fi
+
+# Start a private D-Bus session bus only when the display manager has not.
+if [ -z "${DBUS_SESSION_BUS_ADDRESS:-}" ]; then
+  if command -v dbus-run-session >/dev/null 2>&1; then
+    exec dbus-run-session -- "$0" "$@"
+  elif command -v dbus-launch >/dev/null 2>&1; then
+    eval "$(dbus-launch --sh-syntax --exit-with-session)"
+  fi
+fi
+
+export XDG_CURRENT_DESKTOP="CheesecakeOS"
+export XDG_SESSION_DESKTOP="cheesecake-os"
+export XDG_SESSION_TYPE="x11"
+
+# Openbox manages the window (borderless, fullscreen); it is not a compositor.
+WM_PID=""
+if command -v openbox >/dev/null 2>&1; then
+  openbox --config-file "$OPENBOX_RC" &
+  WM_PID=$!
+else
+  echo "cheesecake-session: openbox not found; running without a window manager" >&2
+fi
+
+# Stop only the window manager we started — never other user processes.
+cleanup() {
+  if [ -n "$WM_PID" ]; then
+    kill "$WM_PID" 2>/dev/null || true
+  fi
+}
+trap cleanup EXIT INT TERM
+
+# Cheesecake OS is the foreground process; its exit ends the session.
+"$CHEESECAKE_BIN" "$@"

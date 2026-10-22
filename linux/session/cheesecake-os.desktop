@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=XSession
+Name=Cheesecake OS (Blueberry Edition)
+Comment=Full-screen Cheesecake OS desktop
+Exec=/usr/bin/cheesecake-session
+TryExec=/usr/bin/cheesecake-os
+DesktopNames=CheesecakeOS

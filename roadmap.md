@@ -12,5 +12,6 @@
 - [x] Document Linux setup; verify JavaScript bridge boundaries and signed-out browser upload/reload compatibility.
 - [x] Complete Tauri shell entry points, locked compile/package commands, prerequisite checks, Rust 1.90 requirement and Linux instructions; native execution still awaits a Linux desktop.
 - [ ] Compile and exercise the Tauri host, native tests and Documents launcher on Linux — blocked by missing D-Bus/WebKitGTK desktop libraries and native session in this sandbox.
-- [ ] Linux session/startup files — deferred while local music playback is completed.
+- [x] Linux session/startup files (Openbox X11 session, login-screen entry, test launcher, docs); real-machine run still unverified.
+- [ ] Make Start menu Shut Down end the native session in Linux mode.
 - [x] Make Winamp play audio saved in browser Documents without cloud sign-in or remote sample tracks; verified upload, reload, Play-button audio progress offline, and reopening; local playlist tests pass.
