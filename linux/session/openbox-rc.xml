@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Minimal Openbox profile for the Cheesecake OS session.
+     Removes window chrome, menus and shortcuts so Cheesecake OS owns the screen. -->
+<openbox_config xmlns="http://openbox.org/3.4/rc">
+  <desktops>
+    <number>1</number>
+  </desktops>
+  <margins><top>0</top><bottom>0</bottom><left>0</left><right>0</right></margins>
+  <keyboard>
+    <!-- No Openbox key bindings: keys go straight to Cheesecake OS. -->
+  </keyboard>
+  <mouse>
+    <!-- No root-window menus: right-click is handled by the Cheesecake desktop. -->
+  </mouse>
+  <applications>
+    <application class="cheesecake-os">
+      <decor>no</decor>
+      <fullscreen>yes</fullscreen>
+      <maximized>yes</maximized>
+      <focus>yes</focus>
+    </application>
+    <application title="Cheesecake OS*">
+      <decor>no</decor>
+      <fullscreen>yes</fullscreen>
+      <maximized>yes</maximized>
+      <focus>yes</focus>
+    </application>
+  </applications>
+</openbox_config>

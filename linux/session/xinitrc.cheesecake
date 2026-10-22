@@ -1,0 +1,6 @@
+#!/bin/sh
+# Test without a login screen:  startx ./linux/session/xinitrc.cheesecake
+# Or nested inside your desktop: Xephyr :2 -screen 1280x800 & DISPLAY=:2 sh ./linux/session/xinitrc.cheesecake
+HERE="$(cd "$(dirname "$0")" && pwd)"
+export CHEESECAKE_SESSION_DIR="${CHEESECAKE_SESSION_DIR:-$HERE}"
+exec sh "$HERE/cheesecake-session" "$@"
