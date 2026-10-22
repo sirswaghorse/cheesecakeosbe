@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import CalendarFlyout from "./CalendarFlyout";
 
 const Clock = () => {
   const [time, setTime] = useState(new Date());
@@ -11,9 +12,16 @@ const Clock = () => {
   const formatted = time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
   return (
-    <div className="text-xs text-white/80 px-3 py-1 border-l" style={{ borderColor: "hsl(210 40% 35% / 0.4)" }}>
-      {formatted}
-    </div>
+    <CalendarFlyout>
+      <button
+        aria-label="Open calendar"
+        title="Open calendar"
+        className="text-xs text-white/80 px-3 py-1 border-l hover:bg-primary/30 transition-colors rounded-sm"
+        style={{ borderColor: "hsl(210 40% 35% / 0.4)" }}
+      >
+        {formatted}
+      </button>
+    </CalendarFlyout>
   );
 };
 
