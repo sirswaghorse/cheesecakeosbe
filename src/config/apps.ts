@@ -54,8 +54,8 @@ export const appRegistry: AppConfig[] = [
   },
   {
     id: "auth",
-    name: "User Account",
-    icon: "👤",
+    name: "Cheesecake Cloud",
+    icon: "☁️",
     defaultWidth: 340,
     defaultHeight: 380,
     component: AuthApp,

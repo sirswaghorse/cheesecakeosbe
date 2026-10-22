@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { appRegistry } from "@/config/apps";
 import { useWindows } from "@/contexts/WindowContext";
+import { useLocalUser } from "@/lib/localUser";
+import { openSettingsSection } from "@/lib/systemSettings";
 import startOrb from "@/assets/start-orb.png.asset.json";
 
 const startMenuApps = appRegistry.filter((a) => a.startMenu);
@@ -30,6 +32,7 @@ const StartMenu = ({
   onShutdown?: () => void;
 }) => {
   const { openApp } = useWindows();
+  const localUser = useLocalUser();
   const ref = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
@@ -95,10 +98,11 @@ const StartMenu = ({
         <div
           className="px-4 py-3 flex items-center gap-3 cursor-pointer hover:brightness-110 transition-all"
           style={{ background: "linear-gradient(90deg, hsl(210 65% 48%), hsl(210 55% 55%))" }}
-          onClick={() => { openApp("auth"); onClose(); }}
+          onClick={() => { openSettingsSection("account"); openApp("controlpanel"); onClose(); }}
+          title="Manage your user account"
         >
           <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-xl">👤</div>
-          <span className="text-sm font-semibold text-white">User</span>
+          <span className="text-sm font-semibold text-white truncate">{localUser.displayName}</span>
         </div>
         <div className="py-2 px-2 flex-1 overflow-auto">
           {query.trim() ? (

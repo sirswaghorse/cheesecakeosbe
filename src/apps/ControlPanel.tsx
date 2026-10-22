@@ -7,6 +7,8 @@ import { SystemSettings, UpdateSettings, DisplaySettings } from "@/components/se
 import { initialSettingsSection, type SettingsSection } from "@/lib/systemSettings";
 import { supabase } from "@/integrations/supabase/client";
 import { useWallpaper } from "@/contexts/WallpaperContext";
+import { useWindows } from "@/contexts/WindowContext";
+import { useLocalUser, setLocalUser } from "@/lib/localUser";
 import { wallpaperPresets, toBackgroundImage } from "@/config/wallpaperPresets";
 
 const ControlPanel = () => {
@@ -14,6 +16,19 @@ const ControlPanel = () => {
   const [user, setUser] = useState<any>(null);
   const [message, setMessage] = useState("");
   const { wallpaper, setWallpaper } = useWallpaper();
+  const localUser = useLocalUser();
+  const { openApp } = useWindows();
+
+  const handleProfileSave = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const saved = setLocalUser({
+      displayName: (form.elements.namedItem("displayName") as HTMLInputElement).value,
+      username: (form.elements.namedItem("username") as HTMLInputElement).value,
+    });
+    (form.elements.namedItem("username") as HTMLInputElement).value = saved.username;
+    setMessage("Profile saved.");
+  };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -88,9 +103,22 @@ const ControlPanel = () => {
           {activeTab === "updates" && <UpdateSettings />}
           {activeTab === "display" && <DisplaySettings />}
           {activeTab === "account" && <div className="space-y-5">
-            <h2 className="text-lg font-semibold">Account</h2>
-            <div className="flex items-center gap-3 border-b pb-4"><User className="size-8 text-primary shrink-0" /><div className="min-w-0"><p className="text-sm font-semibold break-all">{user ? user.email : "Not signed in"}</p><p className="text-xs text-muted-foreground">{user ? "Signed in" : "Open User Account to sign in"}</p></div></div>
-            {user && <form onSubmit={handlePasswordChange} className="space-y-3"><label htmlFor="newPassword" className="text-xs font-semibold">Change password</label><Input id="newPassword" name="newPassword" type="password" autoComplete="new-password" placeholder="New password" required minLength={6} /><Button type="submit" size="sm">Update Password</Button></form>}
+            <h2 className="text-lg font-semibold">User Accounts</h2>
+            <form onSubmit={handleProfileSave} className="space-y-3 border-b pb-5">
+              <div className="flex items-center gap-3"><User className="size-8 text-primary shrink-0" /><div className="min-w-0"><p className="text-sm font-semibold break-all">{localUser.displayName}</p><p className="text-xs text-muted-foreground">Local account · {localUser.username}@cheesecake-os</p></div></div>
+              <label htmlFor="displayName" className="block text-xs font-semibold">Display name</label>
+              <Input id="displayName" name="displayName" defaultValue={localUser.displayName} maxLength={60} />
+              <label htmlFor="username" className="block text-xs font-semibold">Username</label>
+              <Input id="username" name="username" defaultValue={localUser.username} maxLength={32} />
+              <p className="text-[11px] text-muted-foreground">Lowercase letters, numbers, - and _. Your files and apps stay on this computer — no sign-in needed.</p>
+              <Button type="submit" size="sm">Save profile</Button>
+            </form>
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold">Cheesecake Cloud (optional)</h3>
+              <p className="text-xs text-muted-foreground">{user ? `Linked as ${user.email}. Installed apps and wallpaper also sync to your cloud account.` : "Link an online account to sync installed apps and wallpaper across devices."}</p>
+              <Button type="button" size="sm" variant="outline" onClick={() => openApp("auth")}>{user ? "Manage cloud account" : "Link Cheesecake Cloud"}</Button>
+              {user && <form onSubmit={handlePasswordChange} className="space-y-3"><label htmlFor="newPassword" className="text-xs font-semibold">Change cloud password</label><Input id="newPassword" name="newPassword" type="password" autoComplete="new-password" placeholder="New password" required minLength={6} /><Button type="submit" size="sm">Update Password</Button></form>}
+            </div>
           </div>}
           {activeTab === "wallpaper" && <div className="space-y-4">
             <h2 className="text-lg font-semibold">Wallpaper</h2><h3 className="text-xs font-semibold">Blueberry Collection</h3>
@@ -105,7 +133,7 @@ const ControlPanel = () => {
           {message && <p role="status" className="text-xs mt-3 text-primary">{message}</p>}
         </main>
       </div>
-      <footer className="border-t px-5 py-2 text-[10px] text-muted-foreground shrink-0">System preferences are saved on this device. Account and wallpaper settings remain separate.</footer>
+      <footer className="border-t px-5 py-2 text-[10px] text-muted-foreground shrink-0">System preferences are saved on this device. Your local profile, files and apps live on this computer; Cheesecake Cloud sync is optional.</footer>
     </div>
   );
 };
