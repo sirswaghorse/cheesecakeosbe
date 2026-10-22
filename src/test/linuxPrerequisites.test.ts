@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 // Build-only utilities run as Node modules, independently of the browser bundle.
-// @ts-expect-error The intentionally plain-JavaScript build utility has no declarations.
 import { rustIsSupported } from "../../scripts/linux-prerequisites.mjs";
 
 describe("locked Tauri compiler requirement", () => {

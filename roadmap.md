@@ -10,5 +10,5 @@
 - [x] Local-first OS: default local user profile, files saved on this computer (Documents/Pictures/Video/Computer), installed apps saved locally, Cheesecake Cloud optional.
 - [x] Tauri Linux bridge foundation: restricted native commands, system details, and native Documents launcher with browser fallback.
 - [x] Document Linux setup; verify JavaScript bridge boundaries and signed-out browser upload/reload compatibility.
-- [ ] Complete native shell build entry points, prerequisite checks, and Linux compile instructions.
+- [x] Complete Tauri shell entry points, locked compile/package commands, prerequisite checks, Rust 1.90 requirement and Linux instructions; native execution still awaits a Linux desktop.
 - [ ] Compile and exercise the Tauri host, native tests and Documents launcher on Linux — blocked by missing D-Bus/WebKitGTK desktop libraries and native session in this sandbox.

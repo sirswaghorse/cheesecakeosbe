@@ -5,7 +5,7 @@
   "identifier": "social.furbit.cheesecakeos",
   "build": {
     "beforeDevCommand": "bun run dev -- --host 127.0.0.1 --port 8080 --strictPort",
-    "devUrl": "http://localhost:8080",
+    "devUrl": "http://127.0.0.1:8080",
     "beforeBuildCommand": "bun run build",
     "frontendDist": "../dist"
   },
