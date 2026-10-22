@@ -1,6 +1,6 @@
 #!/bin/sh
 # Cheesecake OS: Blueberry Edition — X11 session launcher.
-# Runs as the logged-in user. No sudo, no system services, no auto-login.
+# Runs as the logged-in user without elevated rights, system services or auto-login.
 # The session ends when the Cheesecake OS window exits; the login screen returns.
 set -eu
 
