@@ -1,52 +1,20 @@
-import { useState, useEffect, useCallback, useRef } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useState, useRef, useEffect } from "react";
+import { useLocalFiles, type LocalFile } from "@/lib/localFs";
 
-interface VideoFile {
-  id: string;
-  file_name: string;
-  file_type: string;
-  storage_path: string;
-}
+type VideoFile = LocalFile;
 
 const VideoPlayer = () => {
-  const [videos, setVideos] = useState<VideoFile[]>([]);
-  const [user, setUser] = useState<any>(null);
+  const { files: videos } = useLocalFiles("video/");
   const [currentVideo, setCurrentVideo] = useState<string | null>(null);
   const [currentName, setCurrentName] = useState("");
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setUser(data.session?.user ?? null));
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => setUser(s?.user ?? null));
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const fetchVideos = useCallback(async () => {
-    if (!user) return;
-    const { data } = await supabase
-      .from("user_files")
-      .select("id, file_name, file_type, storage_path")
-      .like("file_type", "video/%")
-      .order("created_at", { ascending: false });
-    if (data) setVideos(data);
-  }, [user]);
-
-  useEffect(() => { fetchVideos(); }, [fetchVideos]);
+  useEffect(() => () => { if (currentVideo) URL.revokeObjectURL(currentVideo); }, [currentVideo]);
 
   const playVideo = (v: VideoFile) => {
-    const { data } = supabase.storage.from("user-files").getPublicUrl(v.storage_path);
-    setCurrentVideo(data.publicUrl);
+    setCurrentVideo(URL.createObjectURL(v.blob));
     setCurrentName(v.file_name);
   };
-
-  if (!user) {
-    return (
-      <div className="h-full flex flex-col items-center justify-center gap-2 p-4" style={{ background: "hsl(0 0% 8%)" }}>
-        <span className="text-3xl">🎬</span>
-        <p className="text-sm font-medium" style={{ color: "hsl(0 0% 70%)" }}>Please log in to access your videos.</p>
-      </div>
-    );
-  }
 
   return (
     <div className="h-full flex flex-col" style={{ background: "hsl(0 0% 8%)" }}>

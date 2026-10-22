@@ -1,49 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/integrations/supabase/client";
-
-interface UserFile {
-  id: string;
-  file_name: string;
-  file_type: string;
-  storage_path: string;
-  created_at: string;
-}
+import { useState } from "react";
+import { useLocalFiles, useObjectUrls, type LocalFile } from "@/lib/localFs";
 
 const Pictures = () => {
-  const [images, setImages] = useState<UserFile[]>([]);
-  const [user, setUser] = useState<any>(null);
-  const [selected, setSelected] = useState<UserFile | null>(null);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setUser(data.session?.user ?? null));
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => setUser(session?.user ?? null));
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const fetchImages = useCallback(async () => {
-    if (!user) return;
-    const { data } = await supabase
-      .from("user_files")
-      .select("*")
-      .like("file_type", "image/%")
-      .order("created_at", { ascending: false });
-    if (data) setImages(data);
-  }, [user]);
-
-  useEffect(() => { fetchImages(); }, [fetchImages]);
-
-  const getUrl = (path: string) =>
-    supabase.storage.from("user-files").getPublicUrl(path).data.publicUrl;
-
-  if (!user) {
-    return (
-      <div className="h-full flex flex-col items-center justify-center gap-2 p-4" style={{ background: "hsl(220 14% 96%)" }}>
-        <span className="text-3xl">🖼️</span>
-        <p className="text-sm font-medium" style={{ color: "hsl(210 20% 30%)" }}>Please log in to view your pictures.</p>
-        <p className="text-xs" style={{ color: "hsl(210 15% 50%)" }}>Open User Account from the Start menu.</p>
-      </div>
-    );
-  }
+  const { files: images } = useLocalFiles("image/");
+  const urls = useObjectUrls(images);
+  const [selected, setSelected] = useState<LocalFile | null>(null);
 
   if (selected) {
     return (
@@ -60,7 +21,7 @@ const Pictures = () => {
         </div>
         <div className="flex-1 flex items-center justify-center p-4 overflow-hidden">
           <img
-            src={getUrl(selected.storage_path)}
+            src={urls[selected.id]}
             alt={selected.file_name}
             className="max-w-full max-h-full object-contain rounded shadow-lg"
           />
@@ -91,7 +52,7 @@ const Pictures = () => {
                 onClick={() => setSelected(img)}
               >
                 <img
-                  src={getUrl(img.storage_path)}
+                  src={urls[img.id]}
                   alt={img.file_name}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                 />

@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useMemo } from "react";
+import { useLocalFiles, VIRTUAL_DISK_SIZE } from "@/lib/localFs";
 import { Progress } from "@/components/ui/progress";
 
 interface StorageStats {
@@ -33,69 +33,26 @@ const getTypeCategory = (fileType: string): string => {
   return "other";
 };
 
-// Placeholder limit — will be subscription-based later
-const STORAGE_LIMIT = 500 * 1024 * 1024; // 500 MB
+const STORAGE_LIMIT = VIRTUAL_DISK_SIZE;
 
 const Computer = () => {
-  const [stats, setStats] = useState<StorageStats | null>(null);
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setUser(data.session?.user ?? null);
-    });
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
-      setUser(session?.user ?? null);
-    });
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const fetchStats = useCallback(async () => {
-    if (!user) return;
-    setLoading(true);
-    const { data } = await supabase
-      .from("user_files")
-      .select("file_type, file_size");
-
-    if (data) {
-      const byTypeMap = new Map<string, { count: number; size: number }>();
-      let totalSize = 0;
-
-      for (const file of data) {
-        const cat = getTypeCategory(file.file_type);
-        const existing = byTypeMap.get(cat) || { count: 0, size: 0 };
-        existing.count++;
-        existing.size += file.file_size;
-        byTypeMap.set(cat, existing);
-        totalSize += file.file_size;
-      }
-
-      setStats({
-        totalFiles: data.length,
-        totalSize,
-        byType: Array.from(byTypeMap.entries())
-          .map(([type, info]) => ({ type, ...info }))
-          .sort((a, b) => b.size - a.size),
-      });
+  const { files, loading } = useLocalFiles();
+  const stats: StorageStats = useMemo(() => {
+    const byTypeMap = new Map<string, { count: number; size: number }>();
+    let totalSize = 0;
+    for (const file of files) {
+      const cat = getTypeCategory(file.file_type);
+      const e = byTypeMap.get(cat) || { count: 0, size: 0 };
+      e.count++; e.size += file.file_size;
+      byTypeMap.set(cat, e);
+      totalSize += file.file_size;
     }
-    setLoading(false);
-  }, [user]);
-
-  useEffect(() => {
-    fetchStats();
-  }, [fetchStats]);
-
-  if (!user) {
-    return (
-      <div className="h-full flex flex-col items-center justify-center gap-2 p-4" style={{ background: "hsl(220 14% 96%)" }}>
-        <span className="text-3xl">💻</span>
-        <p className="text-sm font-medium" style={{ color: "hsl(210 20% 30%)" }}>
-          Please log in to view your computer.
-        </p>
-      </div>
-    );
-  }
+    return {
+      totalFiles: files.length,
+      totalSize,
+      byType: Array.from(byTypeMap.entries()).map(([type, i]) => ({ type, ...i })).sort((x, y) => y.size - x.size),
+    };
+  }, [files]);
 
   if (loading) {
     return (
@@ -131,7 +88,7 @@ const Computer = () => {
             <span className="text-3xl">💾</span>
             <div className="flex-1">
               <p className="text-sm font-semibold" style={{ color: "hsl(210 20% 20%)" }}>
-                Cloud Storage (C:)
+                Local Disk (C:)
               </p>
               <p className="text-[11px]" style={{ color: "hsl(210 15% 50%)" }}>
                 {formatSize(stats?.totalSize ?? 0)} used of {formatSize(STORAGE_LIMIT)}
