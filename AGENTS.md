@@ -4,6 +4,7 @@
 - Keep browser system preferences separate from account preferences and mark Linux-only controls as inactive until a native integration exists, so saved choices never imply operating-system changes.
 - Reuse shared projection controls for Control Panel and the taskbar; only use supported browser APIs for monitor discovery and full screen, because websites cannot directly configure monitors or initiate generic casting.
 - Store browser user files on-device (IndexedDB via src/lib/localFs.ts) and the user profile locally; cloud accounts are optional sync only, so the OS works without sign-in like a real Linux desktop.
+- Load Winamp playlists through the local-audio helper with session-owned Blob URLs and bundled skin, so saved music needs neither cloud authentication nor remote samples.
 - Use Tauri v2 for the native Linux host and a single typed platform bridge for frontend native calls, so the Vite browser desktop remains independently usable.
 - Expose only read-only system details and enum-selected XDG user-folder opening in native commands; scope IPC to the local main webview with no remote permissions or shell plugin, so embedded websites cannot control the computer.
 - In Linux mode Documents launches the installed system file manager; browser Documents remains a local preview and existing browser files are never silently migrated or discarded.

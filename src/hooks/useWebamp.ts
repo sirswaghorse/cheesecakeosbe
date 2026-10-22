@@ -1,34 +1,7 @@
 import { useEffect, useRef, useCallback, useState } from "react";
 import Webamp from "webamp";
-import { supabase } from "@/integrations/supabase/client";
-
-const DEFAULT_TRACKS = [
-  {
-    metaData: { artist: "DJ Mike Llama", title: "Llama Whippin' Intro" },
-    url: "https://cdn.jsdelivr.net/gh/captbaritone/webamp@43434d82cfe0e37286dbbe0666072dc3190a83bc/mp3/llama-2.91.mp3",
-    duration: 5.322286,
-  },
-];
-
-async function getUserAudioTracks() {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session?.user) return [];
-
-  const { data: files } = await supabase
-    .from("user_files")
-    .select("file_name, file_type, storage_path")
-    .like("file_type", "audio/%");
-
-  if (!files || files.length === 0) return [];
-
-  return files.map((f) => {
-    const { data } = supabase.storage.from("user-files").getPublicUrl(f.storage_path);
-    return {
-      metaData: { artist: "My Music", title: f.file_name },
-      url: data.publicUrl,
-    };
-  });
-}
+import { loadLocalAudioPlaylist } from "@/lib/localAudio";
+import { toast } from "@/hooks/use-toast";
 
 /**
  * Hook that manages a Webamp instance.
@@ -37,6 +10,8 @@ async function getUserAudioTracks() {
 export const useWebamp = () => {
   const webampRef = useRef<Webamp | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const openingRef = useRef(false);
+  const releaseRef = useRef<(() => void) | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
   // Create persistent container on mount
@@ -54,42 +29,56 @@ export const useWebamp = () => {
     containerRef.current = container;
 
     return () => {
+      containerRef.current = null;
+      webampRef.current?.dispose();
+      webampRef.current = null;
+      releaseRef.current?.();
+      releaseRef.current = null;
       container.remove();
     };
   }, []);
 
   const open = useCallback(async () => {
-    if (webampRef.current || !containerRef.current) return;
-
-    // Load user audio files, fall back to defaults
-    const userTracks = await getUserAudioTracks();
-    const tracks = userTracks.length > 0 ? userTracks : DEFAULT_TRACKS;
-
-    const webamp = new Webamp({ initialTracks: tracks });
-    webampRef.current = webamp;
-
-    webamp.renderWhenReady(containerRef.current).then(() => {
-      const webampEl = document.getElementById("webamp");
-      if (webampEl) {
-        webampEl.style.pointerEvents = "auto";
+    const container = containerRef.current;
+    if (openingRef.current || webampRef.current || !container) return;
+    openingRef.current = true;
+    let playlist: Awaited<ReturnType<typeof loadLocalAudioPlaylist>> | undefined;
+    let webamp: Webamp | undefined;
+    try {
+      playlist = await loadLocalAudioPlaylist();
+      if (containerRef.current !== container) {
+        playlist.dispose();
+        return;
       }
-      setIsOpen(true);
-    });
-
-    webamp.onClose(() => {
-      webamp.dispose();
-      webampRef.current = null;
-      setIsOpen(false);
-    });
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (webampRef.current) {
-        webampRef.current.dispose();
+      // The default skin is bundled. No remote samples or skins are loaded.
+      webamp = new Webamp(playlist.tracks.length ? { initialTracks: playlist.tracks } : {});
+      webampRef.current = webamp;
+      releaseRef.current = playlist.dispose;
+      webamp.onClose(() => {
+        if (webampRef.current !== webamp) return;
+        webamp?.dispose();
         webampRef.current = null;
+        releaseRef.current?.();
+        releaseRef.current = null;
+        setIsOpen(false);
+      });
+      await webamp.renderWhenReady(container);
+      if (containerRef.current !== container || webampRef.current !== webamp) return;
+      const webampEl = container.querySelector<HTMLElement>("#webamp");
+      if (webampEl) webampEl.style.pointerEvents = "auto";
+      setIsOpen(true);
+    } catch {
+      webamp?.dispose();
+      playlist?.dispose();
+      if (containerRef.current === container) {
+        webampRef.current = null;
+        releaseRef.current = null;
+        setIsOpen(false);
+        toast({ title: "Winamp couldn't open", description: "Your saved music could not be loaded. Try opening Winamp again.", variant: "destructive" });
       }
-    };
+    } finally {
+      openingRef.current = false;
+    }
   }, []);
 
   return { open, isOpen };

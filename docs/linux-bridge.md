@@ -62,7 +62,7 @@ For AppImages, some Linux hosts need FUSE (`libfuse2` or the distribution equiva
 
 Terminal, Task Manager and Computer remain browser-mode tools with their existing simulated values; installing Flatpak/native software, power controls, OS updates, display configuration, casting, login/session management and a bootable Linux image are not implemented.
 
-The local display profile is not the Linux user account and does not rename it. Pictures, Video Player and browser file uploads still use browser storage. Existing browser files are **not** migrated into Linux folders. The native application has separate storage from the published website; it does not automatically inherit that website's files or login session.
+The local display profile is not the Linux user account and does not rename it. Pictures, Video Player, Winamp and browser file uploads still use browser storage. Winamp loads audio saved in browser Documents without cloud sign-in, using local Blob URLs and its bundled default skin; an empty library has no sample track. After uploading or renaming music, close and reopen Winamp to refresh its playlist. Supported audio codecs depend on the browser/WebKitGTK. Local music playback can work offline once the desktop is loaded; offline website startup, browsing and AI are not provided. In Linux mode, Winamp's own file picker can select music, but automatic access to the Linux Music folder is not implemented. Existing browser files are **not** migrated into Linux folders. The native application has separate storage from the published website; it does not automatically inherit that website's files or login session.
 
 ## Validation in Lovable
 
