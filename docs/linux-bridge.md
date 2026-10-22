@@ -19,7 +19,7 @@ For Debian/Ubuntu, the usual native dependencies are:
 
 ```sh
 sudo apt update
-sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev librsvg2-dev libayatana-appindicator3-dev xdg-utils
+sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev librsvg2-dev libayatana-appindicator3-dev libdbus-1-dev pkg-config xdg-utils
 ```
 
 Use your distribution's equivalent packages where appropriate. Ensure the Documents directory is configured and exists (normally managed by `xdg-user-dirs`). Do not start a separate Vite server on port 8080; Tauri starts it automatically.
@@ -42,7 +42,7 @@ bun run test:native
 bun run tauri:build
 ```
 
-The last command runs the frontend build and packages `.deb` and AppImage outputs under `src-tauri/target/release/bundle/`. Retain the generated Cargo lockfile once dependencies are resolved on the Linux build machine. These are application installers, not OS installer images.
+The last command runs the frontend build and packages `.deb` and AppImage outputs under `src-tauri/target/release/bundle/`. The generated Cargo lockfile is included to pin resolved dependencies. These are application installers, not OS installer images.
 
 ### Native acceptance check
 
@@ -60,4 +60,4 @@ The local display profile is not the Linux user account and does not rename it. 
 
 ## Validation in Lovable
 
-The Tauri configuration and JavaScript bridge can be inspected and tested here. The sandbox lacks WebKitGTK 4.1 and a native desktop session, so native compilation, native Rust tests, file-manager launching and installer execution must be verified on a Linux machine before this milestone is called native-tested.
+The Tauri configuration was parsed by the CLI; JavaScript bridge tests and the browser Documents upload/reload flow passed. Native Rust tests were attempted but stopped at missing D-Bus development libraries; WebKitGTK 4.1 and a native desktop session are also absent. Native compilation, native Rust tests, file-manager launching and installer execution must be verified on a Linux machine before this milestone is called native-tested.
