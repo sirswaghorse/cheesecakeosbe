@@ -1,5 +1,9 @@
 # Welcome to your Lovable project
 
+## Cheesecake OS Linux desktop
+
+The browser desktop now includes a Tauri v2 Linux host with a restricted native bridge. See [Linux setup, security boundaries and validation](docs/linux-bridge.md). Run `bun run tauri:dev` on a Linux computer with the required native dependencies; the Lovable preview remains browser-only.
+
 ## Project info
 
 **URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
