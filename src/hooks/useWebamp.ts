@@ -51,7 +51,7 @@ export const useWebamp = () => {
         return;
       }
       // The default skin is bundled. No remote samples or skins are loaded.
-      webamp = new Webamp({});
+      webamp = new Webamp(playlist.tracks.length ? { initialTracks: playlist.tracks } : {});
       webampRef.current = webamp;
       releaseRef.current = playlist.dispose;
       webamp.onClose(() => {
@@ -64,7 +64,6 @@ export const useWebamp = () => {
       });
       await webamp.renderWhenReady(container);
       if (containerRef.current !== container || webampRef.current !== webamp) return;
-      webamp.appendTracks(playlist.tracks);
       const webampEl = container.querySelector<HTMLElement>("#webamp");
       if (webampEl) webampEl.style.pointerEvents = "auto";
       setIsOpen(true);
