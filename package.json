@@ -11,10 +11,14 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "tauri:dev": "tauri dev",
-    "tauri:build": "tauri build",
+    "tauri:dev": "node scripts/linux-shell.mjs dev",
+    "tauri:build": "node scripts/linux-shell.mjs build",
     "tauri:info": "tauri info",
-    "test:native": "cargo test --manifest-path src-tauri/Cargo.toml"
+    "tauri:doctor": "node scripts/linux-shell.mjs doctor",
+    "tauri:compile": "node scripts/linux-shell.mjs compile",
+    "tauri:deb": "node scripts/linux-shell.mjs deb",
+    "tauri:appimage": "node scripts/linux-shell.mjs appimage",
+    "test:native": "node scripts/linux-shell.mjs test"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
