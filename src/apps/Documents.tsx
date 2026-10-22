@@ -30,7 +30,6 @@ const formatSize = (bytes: number) => {
 };
 
 const Documents = () => {
-const Documents = () => {
   const { files } = useLocalFiles();
   const [search, setSearch] = useState("");
   const [uploading, setUploading] = useState(false);
