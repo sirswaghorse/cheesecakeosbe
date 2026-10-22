@@ -2,4 +2,8 @@
 - Keep store catalog metadata in a dedicated module and derive launchability from the app registry, so unavailable placeholders cannot be installed.
 - Keep built-in app protection in the catalog helper and use it for store actions, so system apps remain protected as the catalog changes.
 - Keep browser system preferences separate from account preferences and mark Linux-only controls as inactive until a native integration exists, so saved choices never imply operating-system changes.
-- Reuse shared projection controls for Control Panel and the taskbar; only use supported browser APIs for monitor discovery and full screen, because websites cannot directly configure monitors or initiate generic casting.- Store user files on-device (IndexedDB via src/lib/localFs.ts) and the user profile locally; cloud accounts are optional sync only, so the OS works without sign-in like a real Linux desktop.
+- Reuse shared projection controls for Control Panel and the taskbar; only use supported browser APIs for monitor discovery and full screen, because websites cannot directly configure monitors or initiate generic casting.
+- Store browser user files on-device (IndexedDB via src/lib/localFs.ts) and the user profile locally; cloud accounts are optional sync only, so the OS works without sign-in like a real Linux desktop.
+- Use Tauri v2 for the native Linux host and a single typed platform bridge for frontend native calls, so the Vite browser desktop remains independently usable.
+- Expose only read-only system details and enum-selected XDG user-folder opening in native commands; scope IPC to the local main webview with no remote permissions or shell plugin, so embedded websites cannot control the computer.
+- In Linux mode Documents launches the installed system file manager; browser Documents remains a local preview and existing browser files are never silently migrated or discarded.

@@ -8,3 +8,5 @@
 - [x] Interactive Clock & Calendar flyout — click taskbar clock: month calendar, today highlight, month navigation, add/delete events saved per device.
 - [x] Calculator app — desktop/Start icon, keyboard support, chained operations, protected built-in.
 - [x] Local-first OS: default local user profile, files saved on this computer (Documents/Pictures/Video/Computer), installed apps saved locally, Cheesecake Cloud optional.
+- [ ] Tauri Linux bridge: restricted native commands, real system details, and native Documents folder launch with browser fallback.
+- [ ] Document Linux setup and verify bridge boundaries and browser compatibility.
