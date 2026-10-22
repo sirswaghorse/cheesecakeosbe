@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useLocalUser } from "@/lib/localUser";
 
 type Line = { text: string; kind?: "cmd" | "err" | "art" };
 
@@ -21,7 +21,7 @@ const ART = [
 ];
 
 export default function Terminal() {
-  const [user, setUser] = useState("guest");
+  const user = useLocalUser().username;
   const [cwd, setCwd] = useState("/home");
   const [lines, setLines] = useState<Line[]>([{ text: "Cheesecake OS Terminal — type 'help' for commands." }]);
   const [input, setInput] = useState("");
@@ -30,12 +30,6 @@ export default function Terminal() {
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      const email = data.user?.email;
-      if (email) setUser(email.split("@")[0].replace(/[^a-z0-9_-]/gi, "").toLowerCase() || "user");
-    });
-  }, []);
   useEffect(() => endRef.current?.scrollIntoView({ block: "end" }), [lines]);
 
   const neofetch = (): Line[] => {
