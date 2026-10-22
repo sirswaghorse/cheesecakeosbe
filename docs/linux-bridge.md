@@ -13,13 +13,13 @@ There is no privileged service, root access, shell plugin or listening HTTP brid
 
 ## Run on Linux
 
-Use a regular desktop user, not root. Install Rust (stable, version 1.88 or newer), Bun, a default file manager, `xdg-utils`, and the [Tauri Linux prerequisites](https://v2.tauri.app/start/prerequisites/).
+Use a regular desktop user, not root. Install Rust (stable, version 1.90 or newer, required by the locked Tauri dependency), Node.js 22+, Bun, a default file manager, `xdg-utils`, and the [Tauri Linux prerequisites](https://v2.tauri.app/start/prerequisites/).
 
 For Debian/Ubuntu, the usual native dependencies are:
 
 ```sh
 sudo apt update
-sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev librsvg2-dev libayatana-appindicator3-dev libdbus-1-dev pkg-config xdg-utils
+sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev librsvg2-dev libayatana-appindicator3-dev libdbus-1-dev pkg-config xdg-utils xdg-user-dirs
 ```
 
 Use your distribution's equivalent packages where appropriate. Ensure the Documents directory is configured and exists (normally managed by `xdg-user-dirs`). Do not start a separate Vite server on port 8080; Tauri starts it automatically.
@@ -28,6 +28,7 @@ From the repository root:
 
 ```sh
 bun install
+bun run tauri:doctor
 bun run tauri:info
 bun run tauri:dev
 ```
@@ -39,10 +40,15 @@ The ordinary browser preview is still `bun run dev`.
 ```sh
 bun run test
 bun run test:native
+bun run tauri:compile
 bun run tauri:build
 ```
 
 The last command runs the frontend build and packages `.deb` and AppImage outputs under `src-tauri/target/release/bundle/`. The generated Cargo lockfile is included to pin resolved dependencies. These are application installers, not OS installer images.
+
+`tauri:compile` compiles the release executable without creating installers. `tauri:deb` and `tauri:appimage` package only the chosen format. Every native entry point checks Linux, the Rust version, tools and required desktop development libraries before starting. Development additionally checks for a desktop session and `xdg-open`. The checker reports missing requirements but never installs packages or changes the computer. All commands use Cargo's `--locked` option.
+
+For AppImages, some Linux hosts need FUSE (`libfuse2` or the distribution equivalent). In environments without FUSE, run the packaging command with `APPIMAGE_EXTRACT_AND_RUN=1`. Compile on the oldest Linux distribution you intend to support; a binary built on a newer system may require newer system libraries. Native launch validation still needs an actual Linux desktop.
 
 ### Native acceptance check
 

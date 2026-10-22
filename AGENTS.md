@@ -7,3 +7,4 @@
 - Use Tauri v2 for the native Linux host and a single typed platform bridge for frontend native calls, so the Vite browser desktop remains independently usable.
 - Expose only read-only system details and enum-selected XDG user-folder opening in native commands; scope IPC to the local main webview with no remote permissions or shell plugin, so embedded websites cannot control the computer.
 - In Linux mode Documents launches the installed system file manager; browser Documents remains a local preview and existing browser files are never silently migrated or discarded.
+- Route native development, compilation, tests and packaging through the Linux prerequisite checker and locked Cargo resolution, so missing desktop libraries fail early and native dependencies remain reproducible.
