@@ -4,21 +4,32 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { useSystemPreferences } from "@/lib/systemSettings";
+import { platformBridge, type SystemSummary } from "@/lib/platformBridge";
 
 export function SystemSettings() {
   const { preferences, update } = useSystemPreferences();
   const [name, setName] = useState(preferences.deviceName);
   const [message, setMessage] = useState("");
+  const [summary, setSummary] = useState<SystemSummary | null>(null);
+  const [bridgeError, setBridgeError] = useState("");
+  const native = platformBridge.environment === "linux";
+  useEffect(() => {
+    let active = true;
+    platformBridge.getSystemSummary().then(value => { if (active) setSummary(value); })
+      .catch(() => { if (active) setBridgeError("Could not read Linux system details."); });
+    return () => { active = false; };
+  }, []);
   return <div className="space-y-5">
-    <div className="flex items-center gap-3"><Settings2 className="size-8 text-primary" /><div><h2 className="text-lg font-semibold">Cheesecake OS</h2><p className="text-xs text-muted-foreground">Blueberry Edition · Browser desktop</p></div></div>
+    <div className="flex items-center gap-3"><Settings2 className="size-8 text-primary" /><div><h2 className="text-lg font-semibold">Cheesecake OS</h2><p className="text-xs text-muted-foreground">Blueberry Edition · {native ? "Linux desktop" : "Browser desktop"}</p></div></div>
     <dl className="divide-y text-xs">
-      {[['Environment', 'Web application'], ['Linux integration', 'Not connected'], ['Kernel & hardware', 'Available after Linux integration'], ['Browser language', navigator.language]].map(([label, value]) => <div key={label} className="flex justify-between gap-4 py-3"><dt className="text-muted-foreground">{label}</dt><dd className="text-right">{value}</dd></div>)}
+      {(summary ? [['Environment', `${summary.os} ${summary.osVersion}`], ['Linux integration', 'Connected · Tauri'], ['Kernel', summary.kernel], ['Computer hostname', summary.hostname], ['Memory', `${(summary.usedMemory / 1073741824).toFixed(1)} / ${(summary.totalMemory / 1073741824).toFixed(1)} GiB`]] : [['Environment', native ? 'Tauri Linux host' : 'Web application'], ['Linux integration', native ? (bridgeError ? 'Unavailable' : 'Connecting…') : 'Not connected'], ['Kernel & hardware', native ? 'Waiting for system details' : 'Available after Linux integration'], ['Browser language', navigator.language]]).map(([label, value]) => <div key={label} className="flex justify-between gap-4 py-3"><dt className="text-muted-foreground">{label}</dt><dd className="text-right break-words min-w-0">{value}</dd></div>)}
     </dl>
     <form onSubmit={e => { e.preventDefault(); const ok = update({ deviceName: name }); setMessage(ok ? "Desktop name saved on this device. This does not change your computer’s hostname." : "Could not save your desktop name."); }} className="space-y-2 border-t pt-4">
       <label htmlFor="desktop-name" className="text-xs font-semibold">Desktop name</label>
       <div className="flex gap-2"><Input id="desktop-name" value={name} onChange={e => setName(e.target.value)} maxLength={64} required className="min-w-0" /><Button size="sm" type="submit">Save</Button></div>
     </form>
-    <div className="border-t pt-4 text-xs space-y-2"><h3 className="font-semibold">Linux system controls</h3><p className="text-muted-foreground">Power management, drivers, hardware, and computer hostname settings require the future Linux integration.</p></div>
+    <div className="border-t pt-4 text-xs space-y-2"><h3 className="font-semibold">Linux system controls</h3><p className="text-muted-foreground">{native ? "System details and the Documents file manager are connected. Power management, drivers, updates and hostname changes are not enabled yet." : "Power management, drivers, hardware, and computer hostname settings require the future Linux integration."}</p></div>
+    {bridgeError && <p role="alert" className="text-xs text-destructive">{bridgeError}</p>}
     {message && <p role="status" className="text-xs text-primary">{message}</p>}
   </div>;
 }

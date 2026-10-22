@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { addFile, deleteFile, renameFile, useLocalFiles, type LocalFile } from "@/lib/localFs";
+import { platformBridge } from "@/lib/platformBridge";
+import NativeDocuments from "@/components/NativeDocuments";
 
 type UserFile = LocalFile;
 
@@ -29,7 +31,7 @@ const formatSize = (bytes: number) => {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 };
 
-const Documents = () => {
+const BrowserDocuments = () => {
   const { files } = useLocalFiles();
   const [search, setSearch] = useState("");
   const [uploading, setUploading] = useState(false);
@@ -242,4 +244,6 @@ const Documents = () => {
   );
 };
 
-export default Documents;
+export default function Documents() {
+  return platformBridge.environment === "linux" ? <NativeDocuments /> : <BrowserDocuments />;
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Cheesecake OS",
+  "version": "0.1.0",
+  "identifier": "social.furbit.cheesecakeos",
+  "build": {
+    "beforeDevCommand": "bun run dev -- --host 127.0.0.1 --port 8080 --strictPort",
+    "devUrl": "http://localhost:8080",
+    "beforeBuildCommand": "bun run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [{ "label": "main", "title": "Cheesecake OS: Blueberry Edition", "width": 1280, "height": 800, "minWidth": 800, "minHeight": 600 }],
+    "security": {
+      "capabilities": ["main-local"],
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' asset: http://asset.localhost https: data: blob:; font-src 'self' data:; media-src 'self' https: data: blob:; connect-src 'self' ipc: http://ipc.localhost https:; frame-src https: blob:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["deb", "appimage"],
+    "category": "Utility",
+    "shortDescription": "Cheesecake OS Blueberry Edition desktop",
+    "icon": ["icons/icon.png"]
+  }
+}
