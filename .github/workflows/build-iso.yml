@@ -1,0 +1,64 @@
+# Builds the Cheesecake OS: Blueberry Edition bootable ISO in the cloud.
+# No local Debian machine needed: GitHub's Ubuntu runner compiles the Tauri
+# .deb, then a privileged Debian bookworm container runs live-build.
+# Trigger it manually from the Actions tab ("Run workflow") or push changes
+# to the Linux/Tauri sources. The finished ISO appears as a build artifact.
+name: Build Cheesecake OS ISO
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "linux/**"
+      - "src-tauri/**"
+      - ".github/workflows/build-iso.yml"
+
+jobs:
+  build-iso:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Set up Rust (stable, locked Tauri requirement)
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Cargo build
+        uses: Swatinem/rust-cache@v2
+
+      - name: Install Tauri Linux build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential pkg-config curl file \
+            libgtk-3-dev libwebkit2gtk-4.1-dev libdbus-1-dev \
+            libssl-dev librsvg2-dev
+
+      - name: Install JavaScript dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build the Cheesecake OS .deb package
+        run: npm run tauri:deb
+
+      - name: Build the ISO in a Debian bookworm container
+        run: |
+          DEB="$(ls src-tauri/target/release/bundle/deb/*.deb | head -n 1)"
+          docker run --rm --privileged \
+            -v "$PWD:/work" -w /work \
+            debian:bookworm sh -c "
+              apt-get update &&
+              apt-get install -y --no-install-recommends live-build ca-certificates &&
+              linux/iso/build-iso.sh '$DEB'
+            "
+
+      - name: Upload the ISO as a build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cheesecake-os-blueberry-iso
+          path: build/iso/*.iso
+          retention-days: 14
