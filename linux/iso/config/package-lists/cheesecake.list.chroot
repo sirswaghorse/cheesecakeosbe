@@ -1,0 +1,22 @@
+# Desktop base for Cheesecake OS: Blueberry Edition
+xserver-xorg
+xinit
+openbox
+lightdm
+dbus-x11
+xdg-utils
+xdg-user-dirs
+thunar
+network-manager
+pipewire
+pipewire-pulse
+wireplumber
+fonts-dejavu
+# Runtime libraries for the Tauri app (WebKitGTK 4.1)
+libwebkit2gtk-4.1-0
+libgtk-3-0
+gstreamer1.0-plugins-good
+gstreamer1.0-libav
+# Install-to-disk
+calamares
+calamares-settings-debian
