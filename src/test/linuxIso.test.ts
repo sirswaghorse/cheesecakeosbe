@@ -26,3 +26,20 @@ describe("Linux ISO recipe", () => {
     expect(() => execFileSync("sh", ["-n", resolve(iso, "config/hooks/normal/0500-cheesecake-session.hook.chroot")])).not.toThrow();
   });
 });
+
+describe("GitHub Actions ISO workflow", () => {
+  const workflow = readFileSync(resolve(__dirname, "../../.github/workflows/build-iso.yml"), "utf8");
+
+  it("is manually triggerable and uploads the ISO as an artifact", () => {
+    expect(workflow).toContain("workflow_dispatch");
+    expect(workflow).toContain("actions/upload-artifact@v4");
+    expect(workflow).toContain("build/iso/*.iso");
+  });
+
+  it("builds the Tauri deb, then runs live-build in a privileged Debian container", () => {
+    expect(workflow).toContain("npm run tauri:deb");
+    expect(workflow).toContain("debian:bookworm");
+    expect(workflow).toContain("--privileged");
+    expect(workflow).toContain("linux/iso/build-iso.sh");
+  });
+});

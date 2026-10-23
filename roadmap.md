@@ -16,3 +16,4 @@
 - [x] Make Start menu Shut Down end the native session in Linux mode.
 - [x] Make Winamp play audio saved in browser Documents without cloud sign-in or remote sample tracks; verified upload, reload, Play-button audio progress offline, and reopening; local playlist tests pass.
 - [x] Debian live-build ISO recipe (auto-login live session, Calamares installer); real build awaits a Debian machine.
+- [x] GitHub Actions ISO build workflow (.github/workflows/build-iso.yml) — manual or push-triggered cloud build, ISO downloadable as an artifact; first real run still pending.
