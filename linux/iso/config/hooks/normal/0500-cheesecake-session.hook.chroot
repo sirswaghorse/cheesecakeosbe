@@ -1,0 +1,6 @@
+#!/bin/sh
+# Make Cheesecake OS the only desktop session in the image.
+set -eu
+chmod 0755 /usr/bin/cheesecake-session
+test -x /usr/bin/cheesecake-os || { echo "cheesecake-os binary missing from image" >&2; exit 1; }
+find /usr/share/xsessions -name '*.desktop' ! -name 'cheesecake-os.desktop' -delete

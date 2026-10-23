@@ -18,7 +18,8 @@
     "tauri:compile": "node scripts/linux-shell.mjs compile",
     "tauri:deb": "node scripts/linux-shell.mjs deb",
     "tauri:appimage": "node scripts/linux-shell.mjs appimage",
-    "test:native": "node scripts/linux-shell.mjs test"
+    "test:native": "node scripts/linux-shell.mjs test",
+    "iso:build": "sudo sh linux/iso/build-iso.sh"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

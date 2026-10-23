@@ -10,3 +10,4 @@
 - In Linux mode Documents launches the installed system file manager; browser Documents remains a local preview and existing browser files are never silently migrated or discarded.
 - Route native development, compilation, tests and packaging through the Linux prerequisite checker and locked Cargo resolution, so missing desktop libraries fail early and native dependencies remain reproducible.
 - Ship the Linux X11 session as user-level files in linux/session (Openbox window manager, app as foreground process, no sudo/auto-login/global hooks), so testing never replaces the user's existing desktop.
+- Build the installable ISO with Debian live-build from linux/iso, reusing the linux/session files and the Tauri .deb; auto-login lives only in the ISO's LightDM config, so the dedicated image boots into Cheesecake OS while developer session files stay opt-in.
