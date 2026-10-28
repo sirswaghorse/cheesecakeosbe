@@ -68,23 +68,38 @@ async fn system_summary() -> Result<SystemSummary, String> {
 async fn open_known_folder(folder: KnownFolder) -> Result<(), String> {
     require_linux()?;
     let path = folder.path().ok_or("This user folder is not configured in Linux.")?;
-    if !path.is_absolute() || !path.is_dir() {
-        return Err("This user folder does not exist.".into());
+    if !path.is_absolute() {
+        return Err("This user folder is not configured in Linux.".into());
     }
     tauri::async_runtime::spawn_blocking(move || {
+        // Fresh live sessions may not have the XDG folders yet — create the
+        // requested one instead of failing.
+        if !path.is_dir() {
+            std::fs::create_dir_all(&path)
+                .map_err(|_| "Could not create this user folder.".to_string())?;
+        }
         // One fixed executable, one absolute argument. Never execute a shell.
-        let status = Command::new("xdg-open")
-            .arg(path)
+        let opened = Command::new("xdg-open")
+            .arg(&path)
             .stdin(Stdio::null())
             .stdout(Stdio::null())
             .stderr(Stdio::null())
             .status()
-            .map_err(|_| "Could not launch the system file manager.".to_string())?;
-        if status.success() {
-            Ok(())
-        } else {
-            Err("The system file manager could not open this folder.".into())
+            .map(|s| s.success())
+            .unwrap_or(false);
+        if opened {
+            return Ok(());
         }
+        // xdg-open can fail in minimal sessions without a desktop portal;
+        // fall back to the file manager shipped with Cheesecake OS.
+        Command::new("thunar")
+            .arg(&path)
+            .stdin(Stdio::null())
+            .stdout(Stdio::null())
+            .stderr(Stdio::null())
+            .spawn()
+            .map(|_| ())
+            .map_err(|_| "Could not launch the system file manager.".to_string())
     })
     .await
     .map_err(|_| "The folder request failed.".to_string())?
