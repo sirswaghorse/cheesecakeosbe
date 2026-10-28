@@ -12,3 +12,4 @@
 - Ship the Linux X11 session as user-level files in linux/session (Openbox window manager, app as foreground process, no sudo/auto-login/global hooks), so testing never replaces the user's existing desktop.
 - Build the installable ISO with Debian live-build from linux/iso, reusing the linux/session files and the Tauri .deb; auto-login lives only in the ISO's LightDM config, so the dedicated image boots into Cheesecake OS while developer session files stay opt-in.
 - Build the ISO in the cloud via .github/workflows/build-iso.yml (Tauri .deb on the Ubuntu runner, live-build in a privileged Debian bookworm container, ISO uploaded as an artifact), so no local Debian machine is required.
+- Bundle all app-displayed images as local files under src/assets (never CDN .asset.json pointers), because the Tauri/ISO build runs offline and cannot reach the asset CDN.
