@@ -99,13 +99,13 @@ const CheesecakeAI = () => {
       <PopoverTrigger asChild>
         <button aria-label="Cheesecake AI" title="Cheesecake AI"
           className={`h-10 w-10 mx-1 shrink-0 rounded-md flex items-center justify-center transition-all hover:bg-primary/30 hover:-translate-y-0.5 ${open ? "win-taskbar-btn-active" : ""}`}>
-          <img src={avatar.url} alt="" className="h-8 w-8 rounded-full object-cover bg-card" style={{ imageRendering: "pixelated" }} />
+          <img src={avatar} alt="" className="h-8 w-8 rounded-full object-cover bg-card" style={{ imageRendering: "pixelated" }} />
         </button>
       </PopoverTrigger>
       <PopoverContent side="top" align="start" sideOffset={10}
         className="win-glass w-[360px] max-w-[calc(100vw-16px)] p-0 rounded-lg border border-border/40 text-foreground z-[10000] overflow-hidden animate-in slide-in-from-bottom-2 fade-in duration-200">
         <div className="flex items-center gap-3 px-3 py-2.5 border-b border-border/30">
-          <img src={avatar.url} alt="Cheesecake" className="h-10 w-10 rounded-full object-cover bg-card" style={{ imageRendering: "pixelated" }} />
+          <img src={avatar} alt="Cheesecake" className="h-10 w-10 rounded-full object-cover bg-card" style={{ imageRendering: "pixelated" }} />
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold">Cheesecake AI</p>
             <p className="text-[11px] text-foreground/70 flex items-center gap-1">

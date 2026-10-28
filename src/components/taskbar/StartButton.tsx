@@ -200,7 +200,7 @@ const StartButton = ({ onShutdown }: { onShutdown?: () => void }) => {
         onClick={() => setMenuOpen((v) => !v)}
         aria-label="Start"
       >
-        <img src={startOrb.url} alt="Start" className="h-11 w-auto object-contain drop-shadow-md" />
+        <img src={startOrb} alt="Start" className="h-11 w-auto object-contain drop-shadow-md" />
       </button>
       <StartMenu open={menuOpen} onClose={() => setMenuOpen(false)} onShutdown={onShutdown} />
     </div>
