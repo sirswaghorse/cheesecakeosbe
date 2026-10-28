@@ -26,6 +26,11 @@ export XDG_CURRENT_DESKTOP="CheesecakeOS"
 export XDG_SESSION_DESKTOP="cheesecake-os"
 export XDG_SESSION_TYPE="x11"
 
+# Make sure ~/Documents, ~/Pictures and friends exist before the app asks for them.
+if command -v xdg-user-dirs-update >/dev/null 2>&1; then
+  xdg-user-dirs-update
+fi
+
 # Openbox manages the window (borderless, fullscreen); it is not a compositor.
 WM_PID=""
 if command -v openbox >/dev/null 2>&1; then

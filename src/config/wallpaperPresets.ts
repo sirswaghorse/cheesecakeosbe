@@ -1,4 +1,4 @@
-import officialAsset from "@/assets/cheesecake_os_wallpaper.jpg.asset.json";
+import officialWallpaper from "@/assets/cheesecake_os_wallpaper.jpg";
 
 export interface WallpaperPreset {
   id: string;
@@ -16,7 +16,7 @@ export const wallpaperPresets: WallpaperPreset[] = [
   { id: "cream-cheese", name: "Cream Cheese", value: "linear-gradient(135deg, #fef9c3 0%, #e0e7ff 60%, #a5b4fc 100%)" },
 ];
 
-export const officialWallpaperUrl = officialAsset.url;
+export const officialWallpaperUrl = officialWallpaper;
 
 /** Turns a stored wallpaper value into a CSS background-image value. */
 export const toBackgroundImage = (value: string): string => {

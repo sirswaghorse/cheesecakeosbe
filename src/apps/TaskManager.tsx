@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useWindows } from "@/contexts/WindowContext";
 import { getApp } from "@/config/apps";
-import mascot from "@/assets/cheesecake-blueberry.png.asset.json";
+import mascot from "@/assets/cheesecake-blueberry.png";
 
 const bootTime = Date.now();
 const HISTORY = 40;
@@ -130,7 +130,7 @@ const TaskManager = () => {
       </div>
 
       <div className="pointer-events-none absolute inset-x-0 bottom-0 flex h-28 items-end justify-center bg-gradient-to-t from-primary/25 to-transparent">
-        <img src={mascot.url} alt="Cheesecake mascot" className="h-28 w-auto object-contain object-bottom mix-blend-multiply" />
+        <img src={mascot} alt="Cheesecake mascot" className="h-28 w-auto object-contain object-bottom mix-blend-multiply" />
       </div>
     </div>
   );

@@ -17,3 +17,4 @@
 - [x] Make Winamp play audio saved in browser Documents without cloud sign-in or remote sample tracks; verified upload, reload, Play-button audio progress offline, and reopening; local playlist tests pass.
 - [x] Debian live-build ISO recipe (auto-login live session, Calamares installer); real build awaits a Debian machine.
 - [x] GitHub Actions ISO build workflow (.github/workflows/build-iso.yml) — manual or push-triggered cloud build, ISO downloadable as an artifact; first real run still pending.
+- [x] Fix first VM boot issues: bundle wallpaper/Start orb/Cheesecake AI/Task Manager images locally (CDN pointers fail offline), add Noto Color Emoji font to the ISO, create XDG user folders at session start, and fall back to Thunar when xdg-open fails.

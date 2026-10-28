@@ -3,7 +3,7 @@ import { appRegistry } from "@/config/apps";
 import { useWindows } from "@/contexts/WindowContext";
 import { useLocalUser } from "@/lib/localUser";
 import { openSettingsSection } from "@/lib/systemSettings";
-import startOrb from "@/assets/start-orb.png.asset.json";
+import startOrb from "@/assets/start-orb.png";
 
 const startMenuApps = appRegistry.filter((a) => a.startMenu);
 
@@ -200,7 +200,7 @@ const StartButton = ({ onShutdown }: { onShutdown?: () => void }) => {
         onClick={() => setMenuOpen((v) => !v)}
         aria-label="Start"
       >
-        <img src={startOrb.url} alt="Start" className="h-11 w-auto object-contain drop-shadow-md" />
+        <img src={startOrb} alt="Start" className="h-11 w-auto object-contain drop-shadow-md" />
       </button>
       <StartMenu open={menuOpen} onClose={() => setMenuOpen(false)} onShutdown={onShutdown} />
     </div>
