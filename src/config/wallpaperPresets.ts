@@ -1,4 +1,4 @@
-import officialAsset from "@/assets/cheesecake_os_wallpaper.jpg.asset.json";
+import officialWallpaper from "@/assets/cheesecake_os_wallpaper.jpg";
 
 export interface WallpaperPreset {
   id: string;

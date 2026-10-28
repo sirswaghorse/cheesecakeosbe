@@ -3,7 +3,7 @@ import { appRegistry } from "@/config/apps";
 import { useWindows } from "@/contexts/WindowContext";
 import { useLocalUser } from "@/lib/localUser";
 import { openSettingsSection } from "@/lib/systemSettings";
-import startOrb from "@/assets/start-orb.png.asset.json";
+import startOrb from "@/assets/start-orb.png";
 
 const startMenuApps = appRegistry.filter((a) => a.startMenu);
 

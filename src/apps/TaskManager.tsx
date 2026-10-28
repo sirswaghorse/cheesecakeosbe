@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useWindows } from "@/contexts/WindowContext";
 import { getApp } from "@/config/apps";
-import mascot from "@/assets/cheesecake-blueberry.png.asset.json";
+import mascot from "@/assets/cheesecake-blueberry.png";
 
 const bootTime = Date.now();
 const HISTORY = 40;

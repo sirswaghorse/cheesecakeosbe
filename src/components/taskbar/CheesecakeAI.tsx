@@ -3,7 +3,7 @@ import { Mic, MicOff, Send, Trash2, Volume2, VolumeX } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { playSound } from "@/lib/sounds";
 import { useHandsFree } from "@/hooks/useHandsFree";
-import avatar from "@/assets/cheesecake-ai.png.asset.json";
+import avatar from "@/assets/cheesecake-ai.png";
 
 type Msg = { role: "user" | "assistant"; content: string };
 const KEY = "cheesecake-ai-chat";
